@@ -153,6 +153,13 @@ describe("fillTemplate", () => {
     expect(result).toBe("Code: 2026-04-04.");
   });
 
+  it("passes through non-date value for a date key", () => {
+    const result = fillTemplate("Date: {{effective_date}}.", {
+      effective_date: "TBD",
+    });
+    expect(result).toBe("Date: TBD.");
+  });
+
   it("formats nda_type 'mutual' as 'Mutual'", () => {
     const result = fillTemplate("This is a {{nda_type}} NDA.", {
       nda_type: "mutual",
@@ -165,6 +172,13 @@ describe("fillTemplate", () => {
       nda_type: "one-way",
     });
     expect(result).toBe("This is a One-Way NDA.");
+  });
+
+  it("passes through unknown nda_type values as-is", () => {
+    const result = fillTemplate("This is a {{nda_type}} NDA.", {
+      nda_type: "trilateral",
+    });
+    expect(result).toBe("This is a trilateral NDA.");
   });
 
   it("handles a real template section with multiple variables", () => {

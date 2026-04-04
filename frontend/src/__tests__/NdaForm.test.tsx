@@ -254,4 +254,29 @@ describe("NdaForm", () => {
     const input = screen.getByLabelText(/Full Name/) as HTMLInputElement;
     expect(input.placeholder).toBe("Full Name");
   });
+
+  it("sets required attribute on required inputs", () => {
+    render(
+      <NdaForm
+        variables={mockVariables}
+        values={defaultValues}
+        onChange={jest.fn()}
+      />
+    );
+    expect((screen.getByLabelText(/Full Name/) as HTMLInputElement).required).toBe(true);
+    expect((screen.getByLabelText(/Start Date/) as HTMLInputElement).required).toBe(true);
+    expect((screen.getByLabelText(/Number of Years/) as HTMLInputElement).required).toBe(true);
+    expect((screen.getByLabelText(/NDA Type/) as HTMLSelectElement).required).toBe(true);
+  });
+
+  it("does not set required attribute on optional inputs", () => {
+    render(
+      <NdaForm
+        variables={mockVariables}
+        values={defaultValues}
+        onChange={jest.fn()}
+      />
+    );
+    expect((screen.getByLabelText(/Address/) as HTMLInputElement).required).toBe(false);
+  });
 });

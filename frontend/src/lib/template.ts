@@ -45,7 +45,8 @@ function formatValue(key: string, value: string): string {
     );
   }
   if (key === "nda_type") {
-    return value === "one-way" ? "One-Way" : "Mutual";
+    const labels: Record<string, string> = { mutual: "Mutual", "one-way": "One-Way" };
+    return labels[value] ?? value;
   }
   return value;
 }

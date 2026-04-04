@@ -14,12 +14,12 @@ function highlightUnfilled(text: string): React.ReactNode[] {
   return parts.map((part, i) => {
     if (/^\{\{\w+\}\}$/.test(part)) {
       return (
-        <span key={`${i}-${part}`} style={{ backgroundColor: "#fef08a", color: "#854d0e" }} className="px-1 rounded text-sm">
+        <span key={i} style={{ backgroundColor: "#fef08a", color: "#854d0e" }} className="px-1 rounded text-sm">
           {part}
         </span>
       );
     }
-    return part;
+    return <span key={i}>{part}</span>;
   });
 }
 
@@ -34,7 +34,7 @@ function renderContent(
     return (
       <p key={`p-${i}`} className="mb-3 leading-relaxed">
         {lines.map((line, j) => (
-          <span key={`${i}-${j}-${line.slice(0, 20)}`}>
+          <span key={j}>
             {j > 0 && <br />}
             {highlightUnfilled(line)}
           </span>

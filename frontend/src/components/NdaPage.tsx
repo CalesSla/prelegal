@@ -19,13 +19,37 @@ export default function NdaPage() {
 
   const handleDownload = useCallback(async () => {
     const element = previewRef.current;
-    if (!element) return;
+    if (!element) {
+      alert("Unable to generate PDF. Please refresh the page and try again.");
+      return;
+    }
+
+    const missingRequired = template.variables.filter(
+      (v) => v.required && !values[v.key]?.trim()
+    );
+    if (missingRequired.length > 0) {
+      alert(
+        `Please fill in all required fields: ${missingRequired.map((v) => v.label).join(", ")}`
+      );
+      return;
+    }
 
     setIsDownloading(true);
+
+    let html2pdf;
     try {
-      const html2pdf = (await import("html2pdf.js")).default;
+      html2pdf = (await import("html2pdf.js")).default;
+    } catch (err) {
+      console.error("Failed to load PDF library:", err);
+      alert("The PDF library could not be loaded. Check your connection and try again.");
+      setIsDownloading(false);
+      return;
+    }
+
+    try {
       const partyName = values.disclosing_party_name || "NDA";
-      const filename = `Mutual_NDA_${partyName.replace(/\s+/g, "_")}.pdf`;
+      const typeLabel = values.nda_type === "one-way" ? "OneWay" : "Mutual";
+      const filename = `${typeLabel}_NDA_${partyName.replace(/\s+/g, "_")}.pdf`;
 
       await html2pdf()
         .set({
@@ -38,12 +62,12 @@ export default function NdaPage() {
         .from(element)
         .save();
     } catch (err) {
-      console.error("PDF generation failed", err);
+      console.error("PDF rendering failed:", err);
       alert("Failed to generate PDF. Please try again.");
     } finally {
       setIsDownloading(false);
     }
-  }, [values.disclosing_party_name]);
+  }, [values, template.variables]);
 
   const allRequiredFilled = template.variables
     .filter((v) => v.required)

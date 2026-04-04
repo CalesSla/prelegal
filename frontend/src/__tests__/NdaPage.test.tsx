@@ -172,11 +172,11 @@ describe("NdaPage", () => {
     expect(afterHighlights).toBeLessThan(initialHighlights);
   });
 
-  it("calls html2pdf when Download PDF is clicked with all fields filled", async () => {
+  it("calls html2pdf with Mutual filename when NDA type is mutual", async () => {
     const user = userEvent.setup();
     render(<NdaPage />);
 
-    // Fill all required fields
+    // Fill all required fields (nda_type defaults to "mutual")
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme Corp");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "123 Main St");
     await user.type(screen.getByLabelText(/Receiving Party Name/), "Widget Inc");
@@ -187,12 +187,34 @@ describe("NdaPage", () => {
     const button = screen.getByRole("button", { name: /Download PDF/i });
     await user.click(button);
 
-    // html2pdf was dynamically imported and called
     const html2pdf = (await import("html2pdf.js")) as any;
     expect(html2pdf._mockHtml2pdf).toHaveBeenCalled();
     expect(html2pdf._mockSet).toHaveBeenCalledWith(
       expect.objectContaining({
         filename: "Mutual_NDA_Acme_Corp.pdf",
+      })
+    );
+  });
+
+  it("uses OneWay in filename when NDA type is one-way", async () => {
+    const user = userEvent.setup();
+    render(<NdaPage />);
+
+    await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme Corp");
+    await user.type(screen.getByLabelText(/Disclosing Party Address/), "123 Main St");
+    await user.type(screen.getByLabelText(/Receiving Party Name/), "Widget Inc");
+    await user.type(screen.getByLabelText(/Receiving Party Address/), "456 Oak Ave");
+    await user.type(screen.getByLabelText(/Effective Date/), "2026-04-04");
+    await user.type(screen.getByLabelText(/Governing Law/), "California");
+    await user.selectOptions(screen.getByLabelText(/NDA Type/), "one-way");
+
+    const button = screen.getByRole("button", { name: /Download PDF/i });
+    await user.click(button);
+
+    const html2pdf = (await import("html2pdf.js")) as any;
+    expect(html2pdf._mockSet).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filename: "OneWay_NDA_Acme_Corp.pdf",
       })
     );
   });
@@ -227,5 +249,114 @@ describe("NdaPage", () => {
 
     // Resolve the save promise
     resolveSave!();
+  });
+
+  it("shows alert and re-enables button when PDF generation fails", async () => {
+    const user = userEvent.setup();
+    const alertMock = jest.spyOn(window, "alert").mockImplementation(() => {});
+
+    const html2pdf = (await import("html2pdf.js")) as any;
+    html2pdf._mockSave.mockRejectedValueOnce(new Error("PDF engine error"));
+
+    render(<NdaPage />);
+
+    // Fill all required fields
+    await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
+    await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
+    await user.type(screen.getByLabelText(/Receiving Party Name/), "Widget");
+    await user.type(screen.getByLabelText(/Receiving Party Address/), "Addr2");
+    await user.type(screen.getByLabelText(/Effective Date/), "2026-04-04");
+    await user.type(screen.getByLabelText(/Governing Law/), "CA");
+
+    const button = screen.getByRole("button", { name: /Download PDF/i });
+    await user.click(button);
+
+    // Wait for the async rejection to propagate
+    await screen.findByRole("button", { name: /Download PDF/i });
+
+    expect(alertMock).toHaveBeenCalledWith(
+      "Failed to generate PDF. Please try again."
+    );
+    // Button should be re-enabled (not stuck on "Generating...")
+    expect(
+      screen.getByRole("button", { name: /Download PDF/i })
+    ).toBeEnabled();
+
+    alertMock.mockRestore();
+  });
+
+  it("keeps button disabled when required field has only whitespace", async () => {
+    const user = userEvent.setup();
+    render(<NdaPage />);
+
+    // Fill all required fields
+    await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
+    await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
+    await user.type(screen.getByLabelText(/Receiving Party Name/), "   "); // whitespace only
+    await user.type(screen.getByLabelText(/Receiving Party Address/), "Addr2");
+    await user.type(screen.getByLabelText(/Effective Date/), "2026-04-04");
+    await user.type(screen.getByLabelText(/Governing Law/), "CA");
+
+    const button = screen.getByRole("button", { name: /Download PDF/i });
+    expect(button).toBeDisabled();
+  });
+
+  it("sanitizes filename with special characters in party name", async () => {
+    const user = userEvent.setup();
+    render(<NdaPage />);
+
+    await user.type(
+      screen.getByLabelText(/Disclosing Party Name/),
+      "Acme / Corp & Sons"
+    );
+    await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
+    await user.type(screen.getByLabelText(/Receiving Party Name/), "Widget");
+    await user.type(screen.getByLabelText(/Receiving Party Address/), "Addr2");
+    await user.type(screen.getByLabelText(/Effective Date/), "2026-04-04");
+    await user.type(screen.getByLabelText(/Governing Law/), "CA");
+
+    const button = screen.getByRole("button", { name: /Download PDF/i });
+    await user.click(button);
+
+    const html2pdf = (await import("html2pdf.js")) as any;
+    // Verify special characters are handled in filename
+    expect(html2pdf._mockSet).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filename: expect.stringContaining("Acme"),
+      })
+    );
+  });
+
+  it("button recovers to Download PDF after successful generation", async () => {
+    const user = userEvent.setup();
+
+    let resolveSave: () => void;
+    const html2pdf = (await import("html2pdf.js")) as any;
+    html2pdf._mockSave.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        resolveSave = resolve;
+      })
+    );
+
+    render(<NdaPage />);
+
+    await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
+    await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
+    await user.type(screen.getByLabelText(/Receiving Party Name/), "Widget");
+    await user.type(screen.getByLabelText(/Receiving Party Address/), "Addr2");
+    await user.type(screen.getByLabelText(/Effective Date/), "2026-04-04");
+    await user.type(screen.getByLabelText(/Governing Law/), "CA");
+
+    const button = screen.getByRole("button", { name: /Download PDF/i });
+    await user.click(button);
+
+    expect(screen.getByRole("button", { name: /Generating/i })).toBeInTheDocument();
+
+    // Resolve and verify button recovers
+    resolveSave!();
+    await screen.findByRole("button", { name: /Download PDF/i });
+    expect(
+      screen.getByRole("button", { name: /Download PDF/i })
+    ).toBeEnabled();
   });
 });

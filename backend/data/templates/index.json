@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "categories": [
+    { "id": "confidentiality", "label": "Confidentiality" },
+    { "id": "employment", "label": "Employment" },
+    { "id": "real_estate", "label": "Real Estate" },
+    { "id": "business", "label": "Business" },
+    { "id": "financial", "label": "Financial" },
+    { "id": "personal", "label": "Personal" },
+    { "id": "compliance", "label": "Compliance & Privacy" }
+  ],
+  "templates": [
+    {
+      "id": "nda",
+      "name": "Non-Disclosure Agreement",
+      "file": "nda.json",
+      "category": "confidentiality"
+    },
+    {
+      "id": "employment_agreement",
+      "name": "Employment Agreement",
+      "file": "employment_agreement.json",
+      "category": "employment"
+    },
+    {
+      "id": "independent_contractor",
+      "name": "Independent Contractor Agreement",
+      "file": "independent_contractor.json",
+      "category": "employment"
+    },
+    {
+      "id": "residential_lease",
+      "name": "Residential Lease Agreement",
+      "file": "residential_lease.json",
+      "category": "real_estate"
+    },
+    {
+      "id": "service_agreement",
+      "name": "Service Agreement",
+      "file": "service_agreement.json",
+      "category": "business"
+    },
+    {
+      "id": "partnership_agreement",
+      "name": "Partnership Agreement",
+      "file": "partnership_agreement.json",
+      "category": "business"
+    },
+    {
+      "id": "loan_agreement",
+      "name": "Loan Agreement",
+      "file": "loan_agreement.json",
+      "category": "financial"
+    },
+    {
+      "id": "power_of_attorney",
+      "name": "Power of Attorney",
+      "file": "power_of_attorney.json",
+      "category": "personal"
+    },
+    {
+      "id": "privacy_policy",
+      "name": "Privacy Policy",
+      "file": "privacy_policy.json",
+      "category": "compliance"
+    },
+    {
+      "id": "terms_of_service",
+      "name": "Terms of Service",
+      "file": "terms_of_service.json",
+      "category": "compliance"
+    }
+  ]
+}

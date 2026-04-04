@@ -1,0 +1,63 @@
+{
+  "id": "nda",
+  "name": "Non-Disclosure Agreement",
+  "category": "confidentiality",
+  "description": "A mutual or one-way agreement to protect confidential information shared between parties.",
+  "version": "1.0",
+  "variables": [
+    { "key": "disclosing_party_name", "label": "Disclosing Party Name", "type": "text", "required": true },
+    { "key": "disclosing_party_address", "label": "Disclosing Party Address", "type": "text", "required": true },
+    { "key": "receiving_party_name", "label": "Receiving Party Name", "type": "text", "required": true },
+    { "key": "receiving_party_address", "label": "Receiving Party Address", "type": "text", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "confidentiality_period_years", "label": "Confidentiality Period (Years)", "type": "number", "required": true, "default": 2 },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true },
+    { "key": "nda_type", "label": "NDA Type", "type": "select", "options": ["mutual", "one-way"], "required": true, "default": "mutual" }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Non-Disclosure Agreement (\"Agreement\") is entered into as of {{effective_date}} by and between {{disclosing_party_name}}, located at {{disclosing_party_address}} (\"Disclosing Party\"), and {{receiving_party_name}}, located at {{receiving_party_address}} (\"Receiving Party\"). The Disclosing Party and Receiving Party are collectively referred to as the \"Parties\" and individually as a \"Party.\"\n\nThe Parties wish to explore a potential business relationship (the \"Purpose\") and, in connection with the Purpose, may disclose certain confidential and proprietary information to each other."
+    },
+    {
+      "title": "Definition of Confidential Information",
+      "content": "\"Confidential Information\" means any and all non-public information, in any form or medium, whether written, oral, electronic, or visual, that is disclosed by one Party to the other Party, including but not limited to: (a) trade secrets, inventions, patents, copyrights, trademarks, and other intellectual property; (b) business plans, strategies, forecasts, and financial information; (c) customer and supplier lists, pricing information, and marketing plans; (d) technical data, designs, algorithms, software, and specifications; (e) employee information and organizational structure; and (f) any other information that is designated as \"confidential\" or that a reasonable person would understand to be confidential given the nature of the information and the circumstances of disclosure."
+    },
+    {
+      "title": "Obligations of the Receiving Party",
+      "content": "The Receiving Party agrees to: (a) hold all Confidential Information in strict confidence; (b) not disclose Confidential Information to any third party without the prior written consent of the Disclosing Party; (c) use Confidential Information solely for the Purpose; (d) protect the Confidential Information using at least the same degree of care it uses to protect its own confidential information, but in no event less than reasonable care; and (e) limit access to Confidential Information to those employees, agents, or advisors who have a need to know and who are bound by obligations of confidentiality at least as restrictive as those contained herein."
+    },
+    {
+      "title": "Exclusions from Confidential Information",
+      "content": "Confidential Information does not include information that: (a) is or becomes publicly available through no fault of the Receiving Party; (b) was already known to the Receiving Party prior to disclosure, as evidenced by written records; (c) is independently developed by the Receiving Party without use of or reference to the Confidential Information; or (d) is rightfully received from a third party without restriction on disclosure and without breach of any obligation of confidentiality."
+    },
+    {
+      "title": "Required Disclosures",
+      "content": "If the Receiving Party is required by law, regulation, or court order to disclose any Confidential Information, it shall promptly notify the Disclosing Party in writing prior to such disclosure (to the extent legally permitted) and shall cooperate with the Disclosing Party in seeking a protective order or other appropriate remedy. If such protective order or other remedy is not obtained, the Receiving Party shall disclose only that portion of the Confidential Information which is legally required to be disclosed."
+    },
+    {
+      "title": "Term and Termination",
+      "content": "This Agreement shall remain in effect for a period of {{confidentiality_period_years}} year(s) from the Effective Date, unless terminated earlier by either Party upon thirty (30) days' prior written notice. The obligations of confidentiality shall survive termination of this Agreement for a period of {{confidentiality_period_years}} year(s) from the date of termination."
+    },
+    {
+      "title": "Return or Destruction of Materials",
+      "content": "Upon termination of this Agreement or upon request by the Disclosing Party, the Receiving Party shall promptly return or destroy all copies of Confidential Information in its possession, including any notes, summaries, or analyses derived therefrom, and shall certify such return or destruction in writing."
+    },
+    {
+      "title": "No License or Warranty",
+      "content": "Nothing in this Agreement grants either Party any license or rights in or to the other Party's Confidential Information, except as expressly set forth herein. ALL CONFIDENTIAL INFORMATION IS PROVIDED \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED."
+    },
+    {
+      "title": "Remedies",
+      "content": "The Parties acknowledge that any breach of this Agreement may cause irreparable harm for which monetary damages would be inadequate. Accordingly, the non-breaching Party shall be entitled to seek equitable relief, including injunction and specific performance, in addition to any other remedies available at law or in equity."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Non-Disclosure Agreement as of the date first written above.\n\nDisclosing Party: {{disclosing_party_name}}\nSignature: ___________________________\nDate: ___________________________\n\nReceiving Party: {{receiving_party_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

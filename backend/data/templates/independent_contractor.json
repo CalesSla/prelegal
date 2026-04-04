@@ -1,0 +1,71 @@
+{
+  "id": "independent_contractor",
+  "name": "Independent Contractor Agreement",
+  "category": "employment",
+  "description": "An agreement between a company and an independent contractor defining the scope of work, payment, and relationship.",
+  "version": "1.0",
+  "variables": [
+    { "key": "company_name", "label": "Company Name", "type": "text", "required": true },
+    { "key": "company_address", "label": "Company Address", "type": "text", "required": true },
+    { "key": "contractor_name", "label": "Contractor Name", "type": "text", "required": true },
+    { "key": "contractor_address", "label": "Contractor Address", "type": "text", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "end_date", "label": "End Date", "type": "date", "required": false },
+    { "key": "scope_of_work", "label": "Scope of Work Description", "type": "textarea", "required": true },
+    { "key": "compensation_amount", "label": "Compensation Amount", "type": "number", "required": true },
+    { "key": "compensation_type", "label": "Compensation Type", "type": "select", "options": ["fixed", "hourly", "milestone-based"], "required": true, "default": "fixed" },
+    { "key": "payment_terms_days", "label": "Payment Terms (Days After Invoice)", "type": "number", "required": true, "default": 30 },
+    { "key": "notice_period_days", "label": "Termination Notice Period (Days)", "type": "number", "required": true, "default": 14 },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Independent Contractor Agreement (\"Agreement\") is entered into as of {{effective_date}} by and between {{company_name}}, located at {{company_address}} (\"Company\"), and {{contractor_name}}, located at {{contractor_address}} (\"Contractor\").\n\nThe Company desires to engage the Contractor to perform certain services, and the Contractor desires to perform such services, subject to the terms and conditions set forth in this Agreement."
+    },
+    {
+      "title": "Scope of Work",
+      "content": "The Contractor shall perform the following services for the Company (the \"Services\"):\n\n{{scope_of_work}}\n\nThe Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards. The Contractor shall have the sole discretion to determine the manner and means by which the Services are accomplished, subject to the requirement that the Services conform to the specifications set forth in this Agreement."
+    },
+    {
+      "title": "Compensation and Payment",
+      "content": "The Company shall pay the Contractor ${{compensation_amount}} ({{compensation_type}}) for the Services performed under this Agreement. The Contractor shall submit invoices to the Company upon completion of Services or at agreed-upon intervals. The Company shall pay all undisputed invoices within {{payment_terms_days}} days of receipt. The Contractor shall be responsible for all taxes, including self-employment taxes, arising from the compensation received under this Agreement."
+    },
+    {
+      "title": "Independent Contractor Relationship",
+      "content": "The Contractor is an independent contractor and not an employee, agent, partner, or joint venturer of the Company. The Contractor shall not be entitled to any employee benefits, including but not limited to health insurance, retirement plans, paid leave, or workers' compensation. The Contractor shall have no authority to bind the Company or to assume or create any obligations on behalf of the Company."
+    },
+    {
+      "title": "Term and Termination",
+      "content": "This Agreement shall commence on {{effective_date}} and shall continue until the Services are completed or until terminated by either Party. Either Party may terminate this Agreement at any time by providing {{notice_period_days}} days' written notice to the other Party. Upon termination, the Company shall pay the Contractor for all Services satisfactorily performed through the date of termination."
+    },
+    {
+      "title": "Confidentiality",
+      "content": "The Contractor agrees to hold in confidence all proprietary and confidential information of the Company that the Contractor obtains during the performance of the Services. The Contractor shall not disclose such information to any third party or use it for any purpose other than the performance of the Services, both during and after the term of this Agreement."
+    },
+    {
+      "title": "Intellectual Property",
+      "content": "All work product, deliverables, inventions, and materials created by the Contractor in the performance of the Services (\"Work Product\") shall be the sole and exclusive property of the Company. The Contractor hereby assigns to the Company all rights, title, and interest in and to the Work Product, including all intellectual property rights therein. The Contractor shall execute any documents reasonably requested by the Company to effectuate such assignment."
+    },
+    {
+      "title": "Representations and Warranties",
+      "content": "The Contractor represents and warrants that: (a) the Contractor has the skills, qualifications, and experience necessary to perform the Services; (b) the Services will be performed in a professional manner consistent with industry standards; (c) the Work Product will be original and will not infringe upon the intellectual property rights of any third party; and (d) the Contractor is authorized to enter into this Agreement."
+    },
+    {
+      "title": "Indemnification",
+      "content": "The Contractor shall indemnify, defend, and hold harmless the Company from and against any and all claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to: (a) the Contractor's breach of this Agreement; (b) the Contractor's negligence or willful misconduct; or (c) any claim that the Work Product infringes upon the intellectual property rights of any third party."
+    },
+    {
+      "title": "Limitation of Liability",
+      "content": "IN NO EVENT SHALL EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT, REGARDLESS OF THE FORM OF ACTION OR THE THEORY OF LIABILITY, EVEN IF THE PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Independent Contractor Agreement as of the date first written above.\n\nCompany: {{company_name}}\nSignature: ___________________________\nTitle: ___________________________\nDate: ___________________________\n\nContractor: {{contractor_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "id": "partnership_agreement",
+  "name": "Partnership Agreement",
+  "category": "business",
+  "description": "An agreement between two or more partners establishing a business partnership, including roles, contributions, and profit sharing.",
+  "version": "1.0",
+  "variables": [
+    { "key": "partnership_name", "label": "Partnership Name", "type": "text", "required": true },
+    { "key": "partner_1_name", "label": "Partner 1 Name", "type": "text", "required": true },
+    { "key": "partner_1_address", "label": "Partner 1 Address", "type": "text", "required": true },
+    { "key": "partner_1_contribution", "label": "Partner 1 Initial Contribution ($)", "type": "number", "required": true },
+    { "key": "partner_1_ownership_pct", "label": "Partner 1 Ownership Percentage", "type": "number", "required": true },
+    { "key": "partner_2_name", "label": "Partner 2 Name", "type": "text", "required": true },
+    { "key": "partner_2_address", "label": "Partner 2 Address", "type": "text", "required": true },
+    { "key": "partner_2_contribution", "label": "Partner 2 Initial Contribution ($)", "type": "number", "required": true },
+    { "key": "partner_2_ownership_pct", "label": "Partner 2 Ownership Percentage", "type": "number", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "business_purpose", "label": "Business Purpose", "type": "textarea", "required": true },
+    { "key": "principal_place_of_business", "label": "Principal Place of Business", "type": "text", "required": true },
+    { "key": "fiscal_year_end", "label": "Fiscal Year End", "type": "select", "options": ["December 31", "March 31", "June 30", "September 30"], "required": true, "default": "December 31" },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Formation",
+      "content": "This Partnership Agreement (\"Agreement\") is entered into as of {{effective_date}} by and between {{partner_1_name}}, residing at {{partner_1_address}}, and {{partner_2_name}}, residing at {{partner_2_address}} (collectively, the \"Partners\").\n\nThe Partners hereby form a general partnership under the name \"{{partnership_name}}\" (the \"Partnership\"), in accordance with the laws of the State of {{governing_law_state}}."
+    },
+    {
+      "title": "Purpose and Business",
+      "content": "The purpose of the Partnership is to engage in the following business:\n\n{{business_purpose}}\n\nThe principal place of business of the Partnership shall be {{principal_place_of_business}}. The Partnership may also conduct business at such other locations as the Partners may agree upon from time to time."
+    },
+    {
+      "title": "Capital Contributions",
+      "content": "Each Partner shall make the following initial capital contributions to the Partnership:\n\n- {{partner_1_name}}: ${{partner_1_contribution}}\n- {{partner_2_name}}: ${{partner_2_contribution}}\n\nAdditional capital contributions may be made by mutual agreement of the Partners. No Partner shall be required to make additional contributions without their consent."
+    },
+    {
+      "title": "Ownership and Profit Sharing",
+      "content": "The ownership interests and profit/loss sharing ratios of the Partners shall be as follows:\n\n- {{partner_1_name}}: {{partner_1_ownership_pct}}%\n- {{partner_2_name}}: {{partner_2_ownership_pct}}%\n\nProfits and losses of the Partnership shall be allocated among the Partners in accordance with their respective ownership percentages. Distributions shall be made at such times and in such amounts as the Partners may agree."
+    },
+    {
+      "title": "Management and Voting",
+      "content": "The Partnership shall be managed jointly by all Partners. Each Partner shall have a vote proportional to their ownership percentage. Ordinary business decisions shall require a simple majority vote. The following decisions shall require unanimous consent of all Partners: (a) admission of new partners; (b) sale or disposition of all or substantially all Partnership assets; (c) incurrence of debt exceeding $10,000; (d) amendment of this Agreement; and (e) dissolution of the Partnership."
+    },
+    {
+      "title": "Partner Duties and Restrictions",
+      "content": "Each Partner shall devote such time and attention to the Partnership's business as is reasonably necessary. Each Partner shall act in good faith and in the best interest of the Partnership. No Partner shall, without the written consent of the other Partners: (a) engage in any business that competes with the Partnership; (b) assign or transfer their partnership interest; (c) pledge or encumber Partnership property; or (d) enter into any agreement that binds the Partnership to obligations exceeding $5,000."
+    },
+    {
+      "title": "Books, Records, and Fiscal Year",
+      "content": "The Partnership shall maintain accurate and complete books and records of all financial transactions. The fiscal year of the Partnership shall end on {{fiscal_year_end}} of each year. Each Partner shall have the right to inspect and copy the Partnership's books and records at all reasonable times. The Partnership shall prepare annual financial statements within ninety (90) days after the close of each fiscal year."
+    },
+    {
+      "title": "Withdrawal and Dissolution",
+      "content": "Any Partner may withdraw from the Partnership by providing at least ninety (90) days' prior written notice to the other Partners. Upon withdrawal, the withdrawing Partner shall be entitled to receive the fair market value of their partnership interest as determined by an independent appraiser. The Partnership shall be dissolved upon: (a) unanimous agreement of the Partners; (b) the death, incapacity, or bankruptcy of any Partner (unless the remaining Partners elect to continue); or (c) any event that makes it unlawful to continue the Partnership."
+    },
+    {
+      "title": "Dispute Resolution",
+      "content": "Any dispute arising out of or relating to this Agreement shall first be submitted to mediation. If mediation is unsuccessful, the dispute shall be resolved by binding arbitration in accordance with the rules of the American Arbitration Association. The arbitration shall take place in {{governing_law_state}}, and the decision of the arbitrator shall be final and binding upon the Parties."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Partners have executed this Partnership Agreement as of the date first written above.\n\nPartner 1: {{partner_1_name}}\nSignature: ___________________________\nDate: ___________________________\n\nPartner 2: {{partner_2_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

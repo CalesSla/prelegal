@@ -14,7 +14,7 @@ function highlightUnfilled(text: string): React.ReactNode[] {
   return parts.map((part, i) => {
     if (/^\{\{\w+\}\}$/.test(part)) {
       return (
-        <span key={`${i}-${part}`} className="bg-yellow-200 text-yellow-800 px-1 rounded text-sm">
+        <span key={`${i}-${part}`} style={{ backgroundColor: "#fef08a", color: "#854d0e" }} className="px-1 rounded text-sm">
           {part}
         </span>
       );
@@ -53,8 +53,13 @@ export default function NdaPreview({
   return (
     <div
       ref={previewRef}
-      className="bg-white p-10 shadow-sm border border-gray-200 max-w-[800px] mx-auto"
-      style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
+      className="p-10 max-w-[800px] mx-auto"
+      style={{
+        fontFamily: "'Georgia', 'Times New Roman', serif",
+        backgroundColor: "#ffffff",
+        border: "1px solid #e5e7eb",
+        color: "#1f2937",
+      }}
     >
       <h1 className="text-2xl font-bold text-center mb-8 tracking-wide uppercase">
         {title}
@@ -64,7 +69,7 @@ export default function NdaPreview({
           <h2 className="text-base font-bold mb-2 uppercase tracking-wide">
             {index + 1}. {section.title}
           </h2>
-          <div className="text-sm text-gray-800">
+          <div className="text-sm" style={{ color: "#1f2937" }}>
             {renderContent(section.content, values)}
           </div>
         </div>

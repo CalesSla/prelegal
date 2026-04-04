@@ -1,0 +1,65 @@
+{
+  "id": "power_of_attorney",
+  "name": "Power of Attorney",
+  "category": "personal",
+  "description": "A document authorizing one person to act on behalf of another in legal or financial matters.",
+  "version": "1.0",
+  "variables": [
+    { "key": "principal_name", "label": "Principal Name", "type": "text", "required": true },
+    { "key": "principal_address", "label": "Principal Address", "type": "text", "required": true },
+    { "key": "agent_name", "label": "Agent (Attorney-in-Fact) Name", "type": "text", "required": true },
+    { "key": "agent_address", "label": "Agent Address", "type": "text", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "poa_type", "label": "Power of Attorney Type", "type": "select", "options": ["general", "limited", "durable"], "required": true, "default": "general" },
+    { "key": "scope_of_authority", "label": "Scope of Authority (if limited)", "type": "textarea", "required": false },
+    { "key": "expiration_date", "label": "Expiration Date", "type": "date", "required": false },
+    { "key": "alternate_agent_name", "label": "Alternate Agent Name", "type": "text", "required": false },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Declaration",
+      "content": "I, {{principal_name}}, residing at {{principal_address}} (\"Principal\"), hereby appoint {{agent_name}}, residing at {{agent_address}} (\"Agent\" or \"Attorney-in-Fact\"), to act on my behalf as my true and lawful attorney-in-fact, effective as of {{effective_date}}.\n\nThis is a {{poa_type}} Power of Attorney."
+    },
+    {
+      "title": "Grant of Authority",
+      "content": "I grant my Agent the following powers and authority to act on my behalf:\n\n(a) Financial matters: To manage, buy, sell, or otherwise deal with my real and personal property; to conduct banking transactions; to manage investments; to file tax returns and interact with taxing authorities; to manage retirement accounts and benefits.\n\n(b) Legal matters: To engage and dismiss attorneys, accountants, and other professionals; to execute legal documents on my behalf; to commence, prosecute, defend, or settle legal proceedings.\n\n(c) Personal matters: To make decisions regarding my personal affairs as may be necessary and appropriate.\n\n(d) Business matters: To conduct business on my behalf, including entering into contracts, managing business interests, and making business decisions."
+    },
+    {
+      "title": "Scope Limitations",
+      "content": "If this is a limited Power of Attorney, the Agent's authority is restricted to the following specific matters:\n\n{{scope_of_authority}}\n\nThe Agent shall not have authority to act beyond the scope expressly granted herein."
+    },
+    {
+      "title": "Durability",
+      "content": "If this is a durable Power of Attorney, this instrument shall not be affected by my subsequent disability or incapacity. If this is not a durable Power of Attorney, this instrument shall become void upon my disability or incapacity."
+    },
+    {
+      "title": "Alternate Agent",
+      "content": "If the Agent named above is unable or unwilling to serve, I appoint {{alternate_agent_name}} as my alternate Agent, with all the same powers and authority granted to the primary Agent herein."
+    },
+    {
+      "title": "Agent's Duties",
+      "content": "The Agent shall: (a) act in the Principal's best interest; (b) act within the scope of authority granted; (c) keep accurate records of all transactions conducted on behalf of the Principal; (d) keep the Principal's property separate from the Agent's personal property; and (e) act with the care, competence, and diligence ordinarily exercised by agents in similar circumstances."
+    },
+    {
+      "title": "Compensation and Reimbursement",
+      "content": "The Agent shall be entitled to reasonable compensation for services rendered under this Power of Attorney, unless otherwise agreed. The Agent shall be entitled to reimbursement for all reasonable expenses incurred in connection with the performance of duties under this Power of Attorney."
+    },
+    {
+      "title": "Termination",
+      "content": "This Power of Attorney shall terminate upon: (a) the Principal's death; (b) the Principal's written revocation delivered to the Agent; (c) the expiration date specified herein, if any; (d) the Agent's death, incapacity, or resignation; or (e) a court order revoking the Power of Attorney."
+    },
+    {
+      "title": "Third-Party Reliance",
+      "content": "Any third party who receives a copy of this Power of Attorney may rely upon the authority granted herein unless such third party has received actual notice of revocation or termination. No third party shall be liable for acting in good faith reliance on this Power of Attorney."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Power of Attorney shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, I have executed this Power of Attorney as of the date first written above.\n\nPrincipal: {{principal_name}}\nSignature: ___________________________\nDate: ___________________________\n\nWitness 1:\nName: ___________________________\nSignature: ___________________________\nDate: ___________________________\n\nWitness 2:\nName: ___________________________\nSignature: ___________________________\nDate: ___________________________\n\nNOTARY ACKNOWLEDGMENT\nState of {{governing_law_state}}\nCounty of ___________________________\n\nOn this _____ day of _______________, 20___, before me, the undersigned notary public, personally appeared {{principal_name}}, proved to me through satisfactory evidence of identification to be the person whose name is signed on the preceding document, and acknowledged to me that they signed it voluntarily for its stated purpose.\n\nNotary Public: ___________________________\nMy Commission Expires: ___________________________"
+    }
+  ]
+}

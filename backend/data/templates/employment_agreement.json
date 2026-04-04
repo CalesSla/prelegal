@@ -1,0 +1,73 @@
+{
+  "id": "employment_agreement",
+  "name": "Employment Agreement",
+  "category": "employment",
+  "description": "A contract between an employer and employee outlining terms and conditions of employment.",
+  "version": "1.0",
+  "variables": [
+    { "key": "employer_name", "label": "Employer Name", "type": "text", "required": true },
+    { "key": "employer_address", "label": "Employer Address", "type": "text", "required": true },
+    { "key": "employee_name", "label": "Employee Name", "type": "text", "required": true },
+    { "key": "employee_address", "label": "Employee Address", "type": "text", "required": true },
+    { "key": "job_title", "label": "Job Title", "type": "text", "required": true },
+    { "key": "start_date", "label": "Start Date", "type": "date", "required": true },
+    { "key": "salary_amount", "label": "Annual Salary", "type": "number", "required": true },
+    { "key": "pay_frequency", "label": "Pay Frequency", "type": "select", "options": ["weekly", "bi-weekly", "semi-monthly", "monthly"], "required": true, "default": "bi-weekly" },
+    { "key": "work_hours_per_week", "label": "Work Hours Per Week", "type": "number", "required": true, "default": 40 },
+    { "key": "vacation_days_per_year", "label": "Vacation Days Per Year", "type": "number", "required": true, "default": 15 },
+    { "key": "probation_period_months", "label": "Probation Period (Months)", "type": "number", "required": true, "default": 3 },
+    { "key": "notice_period_weeks", "label": "Notice Period (Weeks)", "type": "number", "required": true, "default": 2 },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true },
+    { "key": "employment_type", "label": "Employment Type", "type": "select", "options": ["full-time", "part-time"], "required": true, "default": "full-time" }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Employment Agreement (\"Agreement\") is entered into as of {{start_date}} by and between {{employer_name}}, located at {{employer_address}} (\"Employer\"), and {{employee_name}}, residing at {{employee_address}} (\"Employee\").\n\nThe Employer desires to employ the Employee, and the Employee desires to accept such employment, subject to the terms and conditions set forth in this Agreement."
+    },
+    {
+      "title": "Position and Duties",
+      "content": "The Employer hereby employs the Employee as {{job_title}} on a {{employment_type}} basis. The Employee shall perform all duties and responsibilities customarily associated with such position, as well as any additional duties as may be reasonably assigned by the Employer from time to time. The Employee shall devote their full professional time, attention, and best efforts to the performance of their duties."
+    },
+    {
+      "title": "Compensation",
+      "content": "The Employee shall receive an annual salary of ${{salary_amount}}, payable on a {{pay_frequency}} basis, subject to applicable tax withholdings and deductions. The Employer may, in its sole discretion, review and adjust the Employee's compensation from time to time."
+    },
+    {
+      "title": "Benefits",
+      "content": "The Employee shall be entitled to participate in any employee benefit plans and programs that the Employer may offer from time to time, subject to the terms and eligibility requirements of such plans. The Employee shall be entitled to {{vacation_days_per_year}} paid vacation days per year, to be taken at times mutually agreed upon with the Employer."
+    },
+    {
+      "title": "Work Schedule",
+      "content": "The Employee's regular work schedule shall be {{work_hours_per_week}} hours per week. The specific days and hours of work may be adjusted by the Employer as business needs require, with reasonable notice to the Employee."
+    },
+    {
+      "title": "Probation Period",
+      "content": "The Employee's employment shall be subject to a probationary period of {{probation_period_months}} month(s) commencing on the start date. During the probationary period, either Party may terminate this Agreement with one (1) week's written notice. Successful completion of the probationary period does not alter the at-will nature of the employment."
+    },
+    {
+      "title": "Confidentiality",
+      "content": "The Employee acknowledges that during the course of employment, the Employee may have access to and become acquainted with Confidential Information belonging to the Employer. The Employee agrees to hold all Confidential Information in strict confidence and not to disclose, publish, or otherwise reveal any Confidential Information to any third party during or after employment, except as required in the performance of duties or as authorized in writing by the Employer."
+    },
+    {
+      "title": "Intellectual Property",
+      "content": "All work product, inventions, discoveries, improvements, and creative works made or conceived by the Employee during the course of employment and relating to the Employer's business shall be the sole and exclusive property of the Employer. The Employee hereby assigns to the Employer all rights, title, and interest in and to such work product."
+    },
+    {
+      "title": "Non-Competition and Non-Solicitation",
+      "content": "During the term of employment and for a period of twelve (12) months following termination, the Employee shall not: (a) directly or indirectly engage in, be employed by, or have any interest in any business that competes with the Employer's business within the geographic area in which the Employer operates; or (b) solicit or attempt to solicit any customer, client, or employee of the Employer for the purpose of competing with the Employer's business. This section shall be enforceable to the maximum extent permitted by applicable law."
+    },
+    {
+      "title": "Termination",
+      "content": "Either Party may terminate this Agreement at any time by providing {{notice_period_weeks}} week(s) of written notice to the other Party. The Employer may terminate this Agreement immediately for cause, including but not limited to: gross misconduct, material breach of this Agreement, conviction of a felony, or willful failure to perform duties. Upon termination, the Employee shall return all Employer property and Confidential Information."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Employment Agreement as of the date first written above.\n\nEmployer: {{employer_name}}\nSignature: ___________________________\nTitle: ___________________________\nDate: ___________________________\n\nEmployee: {{employee_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

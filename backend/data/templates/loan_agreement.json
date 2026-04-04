@@ -1,0 +1,68 @@
+{
+  "id": "loan_agreement",
+  "name": "Loan Agreement",
+  "category": "financial",
+  "description": "An agreement between a lender and borrower outlining the terms of a loan, including repayment schedule and interest.",
+  "version": "1.0",
+  "variables": [
+    { "key": "lender_name", "label": "Lender Name", "type": "text", "required": true },
+    { "key": "lender_address", "label": "Lender Address", "type": "text", "required": true },
+    { "key": "borrower_name", "label": "Borrower Name", "type": "text", "required": true },
+    { "key": "borrower_address", "label": "Borrower Address", "type": "text", "required": true },
+    { "key": "loan_amount", "label": "Loan Amount", "type": "number", "required": true },
+    { "key": "interest_rate", "label": "Annual Interest Rate (%)", "type": "number", "required": true },
+    { "key": "loan_term_months", "label": "Loan Term (Months)", "type": "number", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "repayment_frequency", "label": "Repayment Frequency", "type": "select", "options": ["monthly", "quarterly", "annually", "lump-sum"], "required": true, "default": "monthly" },
+    { "key": "late_payment_fee", "label": "Late Payment Fee", "type": "number", "required": true, "default": 25 },
+    { "key": "late_payment_grace_days", "label": "Late Payment Grace Period (Days)", "type": "number", "required": true, "default": 10 },
+    { "key": "prepayment_allowed", "label": "Prepayment Allowed", "type": "select", "options": ["yes", "no"], "required": true, "default": "yes" },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Loan Agreement (\"Agreement\") is entered into as of {{effective_date}} by and between {{lender_name}}, located at {{lender_address}} (\"Lender\"), and {{borrower_name}}, located at {{borrower_address}} (\"Borrower\").\n\nThe Lender agrees to loan to the Borrower, and the Borrower agrees to borrow from the Lender, the sum described herein, subject to the terms and conditions set forth in this Agreement."
+    },
+    {
+      "title": "Loan Amount and Disbursement",
+      "content": "The Lender agrees to loan the Borrower the principal sum of ${{loan_amount}} (the \"Loan\"). The Loan shall be disbursed to the Borrower on or after the Effective Date in a single lump sum, unless otherwise agreed by the Parties in writing."
+    },
+    {
+      "title": "Interest",
+      "content": "The outstanding principal balance of the Loan shall bear interest at a rate of {{interest_rate}}% per annum. Interest shall be calculated on the basis of a 365-day year and the actual number of days elapsed."
+    },
+    {
+      "title": "Repayment",
+      "content": "The Borrower shall repay the Loan in {{repayment_frequency}} installments over a period of {{loan_term_months}} month(s), beginning thirty (30) days after the disbursement of the Loan. Each installment shall consist of principal and accrued interest. The final installment shall include all remaining principal and accrued interest."
+    },
+    {
+      "title": "Late Payments",
+      "content": "If any payment is not received within {{late_payment_grace_days}} day(s) of its due date, the Borrower shall pay a late payment fee of ${{late_payment_fee}} in addition to the overdue amount. The assessment of late fees shall not constitute a waiver of the Lender's right to declare a default under this Agreement."
+    },
+    {
+      "title": "Prepayment",
+      "content": "Prepayment of the Loan is {{prepayment_allowed}}. If prepayment is allowed, the Borrower may prepay the Loan, in whole or in part, at any time without penalty. Any prepayment shall be applied first to accrued interest and then to the outstanding principal balance."
+    },
+    {
+      "title": "Default",
+      "content": "The following events shall constitute a default under this Agreement: (a) failure of the Borrower to make any payment when due; (b) breach by the Borrower of any representation, warranty, or covenant in this Agreement; (c) the Borrower becomes insolvent, files for bankruptcy, or has a receiver appointed for its assets; or (d) any material adverse change in the Borrower's financial condition. Upon default, the Lender may declare the entire outstanding balance immediately due and payable."
+    },
+    {
+      "title": "Representations and Warranties",
+      "content": "The Borrower represents and warrants that: (a) the Borrower has full legal capacity and authority to enter into this Agreement; (b) the execution and performance of this Agreement does not violate any law or conflict with any other agreement to which the Borrower is a party; (c) all information provided to the Lender in connection with this Agreement is true, accurate, and complete; and (d) there are no pending or threatened legal proceedings that could materially affect the Borrower's ability to perform under this Agreement."
+    },
+    {
+      "title": "Remedies",
+      "content": "Upon default, the Lender shall be entitled to all remedies available at law or in equity, including but not limited to: (a) declaring the entire outstanding balance immediately due and payable; (b) charging interest on the overdue amounts at the maximum rate permitted by law; and (c) recovering all costs and expenses of collection, including reasonable attorneys' fees."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Loan Agreement as of the date first written above.\n\nLender: {{lender_name}}\nSignature: ___________________________\nDate: ___________________________\n\nBorrower: {{borrower_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

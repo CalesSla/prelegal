@@ -1,0 +1,78 @@
+{
+  "id": "residential_lease",
+  "name": "Residential Lease Agreement",
+  "category": "real_estate",
+  "description": "A lease agreement between a landlord and tenant for a residential property.",
+  "version": "1.0",
+  "variables": [
+    { "key": "landlord_name", "label": "Landlord Name", "type": "text", "required": true },
+    { "key": "landlord_address", "label": "Landlord Address", "type": "text", "required": true },
+    { "key": "tenant_name", "label": "Tenant Name", "type": "text", "required": true },
+    { "key": "tenant_address", "label": "Tenant Current Address", "type": "text", "required": true },
+    { "key": "property_address", "label": "Rental Property Address", "type": "text", "required": true },
+    { "key": "lease_start_date", "label": "Lease Start Date", "type": "date", "required": true },
+    { "key": "lease_end_date", "label": "Lease End Date", "type": "date", "required": true },
+    { "key": "monthly_rent", "label": "Monthly Rent Amount", "type": "number", "required": true },
+    { "key": "security_deposit", "label": "Security Deposit Amount", "type": "number", "required": true },
+    { "key": "rent_due_day", "label": "Rent Due Day of Month", "type": "number", "required": true, "default": 1 },
+    { "key": "late_fee_amount", "label": "Late Fee Amount", "type": "number", "required": true, "default": 50 },
+    { "key": "late_fee_grace_days", "label": "Late Fee Grace Period (Days)", "type": "number", "required": true, "default": 5 },
+    { "key": "max_occupants", "label": "Maximum Number of Occupants", "type": "number", "required": true, "default": 2 },
+    { "key": "pets_allowed", "label": "Pets Allowed", "type": "select", "options": ["yes", "no"], "required": true, "default": "no" },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Residential Lease Agreement (\"Lease\") is entered into by and between {{landlord_name}}, located at {{landlord_address}} (\"Landlord\"), and {{tenant_name}}, currently residing at {{tenant_address}} (\"Tenant\"), collectively referred to as the \"Parties.\"\n\nThe Landlord agrees to lease to the Tenant, and the Tenant agrees to lease from the Landlord, the residential property located at {{property_address}} (the \"Premises\"), subject to the terms and conditions set forth herein."
+    },
+    {
+      "title": "Term of Lease",
+      "content": "The term of this Lease shall commence on {{lease_start_date}} and shall expire on {{lease_end_date}} (the \"Lease Term\"), unless earlier terminated in accordance with the provisions of this Lease. Upon expiration of the Lease Term, this Lease shall automatically convert to a month-to-month tenancy under the same terms and conditions, unless either Party provides at least thirty (30) days' prior written notice of intent not to renew."
+    },
+    {
+      "title": "Rent",
+      "content": "The Tenant shall pay the Landlord a monthly rent of ${{monthly_rent}}, due on the {{rent_due_day}}th day of each month. Rent shall be payable by check, electronic transfer, or other method agreed upon by the Parties. If rent is not received within {{late_fee_grace_days}} day(s) of the due date, the Tenant shall pay a late fee of ${{late_fee_amount}}."
+    },
+    {
+      "title": "Security Deposit",
+      "content": "Upon execution of this Lease, the Tenant shall pay a security deposit of ${{security_deposit}} to the Landlord. The security deposit shall be held by the Landlord as security for the faithful performance of the Tenant's obligations under this Lease. The Landlord shall return the security deposit, less any lawful deductions for unpaid rent, damages beyond normal wear and tear, and cleaning costs, within the time period required by applicable state law following the termination of this Lease and the Tenant's vacating of the Premises."
+    },
+    {
+      "title": "Use of Premises",
+      "content": "The Premises shall be used solely for residential purposes and shall be occupied by no more than {{max_occupants}} person(s). The Tenant shall not use the Premises for any unlawful purpose or in any manner that would constitute a nuisance or disturbance to neighbors. The Tenant shall comply with all applicable laws, ordinances, and regulations relating to the use of the Premises."
+    },
+    {
+      "title": "Pets",
+      "content": "Pets are {{pets_allowed}} on the Premises. If pets are permitted, the Tenant must obtain prior written approval from the Landlord for each pet and may be required to pay an additional pet deposit or monthly pet fee. The Tenant shall be liable for any damage caused by pets to the Premises."
+    },
+    {
+      "title": "Maintenance and Repairs",
+      "content": "The Landlord shall be responsible for maintaining the structural components of the Premises, including the roof, foundation, exterior walls, and major systems (plumbing, electrical, heating, and air conditioning), in a habitable condition. The Tenant shall be responsible for keeping the Premises clean and in good condition, and for promptly reporting any maintenance issues or needed repairs to the Landlord. The Tenant shall be responsible for repairs necessitated by the Tenant's negligence or misuse."
+    },
+    {
+      "title": "Utilities and Services",
+      "content": "Unless otherwise agreed in writing, the Tenant shall be responsible for the payment of all utilities and services associated with the Premises, including but not limited to electricity, gas, water, sewer, trash collection, internet, and cable television."
+    },
+    {
+      "title": "Alterations",
+      "content": "The Tenant shall not make any alterations, additions, or improvements to the Premises without the prior written consent of the Landlord. Any approved alterations shall become the property of the Landlord upon termination of this Lease, unless the Landlord requests their removal, in which case the Tenant shall restore the Premises to its original condition at the Tenant's expense."
+    },
+    {
+      "title": "Entry by Landlord",
+      "content": "The Landlord or the Landlord's agents may enter the Premises at reasonable times with at least twenty-four (24) hours' prior written notice to the Tenant for the purposes of inspection, maintenance, repairs, showing the Premises to prospective tenants or buyers, or for any other lawful purpose. The Landlord may enter without notice in case of emergency."
+    },
+    {
+      "title": "Termination and Default",
+      "content": "If the Tenant fails to pay rent or otherwise violates any provision of this Lease, the Landlord may, after providing the notice required by applicable law, terminate this Lease and pursue all available legal remedies, including eviction and recovery of unpaid rent and damages. The Tenant may terminate this Lease upon expiration of the Lease Term by providing at least thirty (30) days' prior written notice."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Lease shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Residential Lease Agreement as of the date first written above.\n\nLandlord: {{landlord_name}}\nSignature: ___________________________\nDate: ___________________________\n\nTenant: {{tenant_name}}\nSignature: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

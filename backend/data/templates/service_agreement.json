@@ -1,0 +1,71 @@
+{
+  "id": "service_agreement",
+  "name": "Service Agreement",
+  "category": "business",
+  "description": "A contract between a service provider and a client for the provision of specified services.",
+  "version": "1.0",
+  "variables": [
+    { "key": "provider_name", "label": "Service Provider Name", "type": "text", "required": true },
+    { "key": "provider_address", "label": "Service Provider Address", "type": "text", "required": true },
+    { "key": "client_name", "label": "Client Name", "type": "text", "required": true },
+    { "key": "client_address", "label": "Client Address", "type": "text", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "service_description", "label": "Description of Services", "type": "textarea", "required": true },
+    { "key": "service_fee", "label": "Service Fee", "type": "number", "required": true },
+    { "key": "fee_structure", "label": "Fee Structure", "type": "select", "options": ["fixed", "hourly", "monthly-retainer", "milestone-based"], "required": true, "default": "fixed" },
+    { "key": "payment_terms_days", "label": "Payment Terms (Days After Invoice)", "type": "number", "required": true, "default": 30 },
+    { "key": "term_months", "label": "Agreement Term (Months)", "type": "number", "required": true, "default": 12 },
+    { "key": "notice_period_days", "label": "Termination Notice Period (Days)", "type": "number", "required": true, "default": 30 },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Recitals",
+      "content": "This Service Agreement (\"Agreement\") is entered into as of {{effective_date}} by and between {{provider_name}}, located at {{provider_address}} (\"Provider\"), and {{client_name}}, located at {{client_address}} (\"Client\").\n\nThe Client desires to retain the Provider to perform certain services, and the Provider desires to perform such services, on the terms and conditions set forth in this Agreement."
+    },
+    {
+      "title": "Services",
+      "content": "The Provider agrees to perform the following services for the Client (the \"Services\"):\n\n{{service_description}}\n\nThe Provider shall perform the Services in a professional and timely manner, consistent with generally accepted industry standards and practices."
+    },
+    {
+      "title": "Compensation",
+      "content": "In consideration for the Services, the Client shall pay the Provider a fee of ${{service_fee}} ({{fee_structure}}). The Provider shall submit invoices to the Client in accordance with the agreed-upon schedule. The Client shall pay all undisputed invoices within {{payment_terms_days}} day(s) of receipt. Late payments shall accrue interest at a rate of 1.5% per month or the maximum rate permitted by law, whichever is lower."
+    },
+    {
+      "title": "Term",
+      "content": "This Agreement shall commence on {{effective_date}} and shall continue for a period of {{term_months}} month(s), unless earlier terminated in accordance with the provisions herein. Upon expiration, this Agreement may be renewed by mutual written agreement of the Parties."
+    },
+    {
+      "title": "Termination",
+      "content": "Either Party may terminate this Agreement at any time by providing {{notice_period_days}} day(s) of written notice to the other Party. Either Party may terminate this Agreement immediately upon written notice if the other Party: (a) materially breaches this Agreement and fails to cure such breach within fifteen (15) days of written notice thereof; or (b) becomes insolvent, files for bankruptcy, or has a receiver appointed for its assets."
+    },
+    {
+      "title": "Confidentiality",
+      "content": "Each Party agrees that all information disclosed by one Party to the other in connection with this Agreement that is designated as confidential or that should reasonably be understood to be confidential shall be kept in strict confidence. Neither Party shall disclose such information to any third party without the prior written consent of the disclosing Party, except as required by law."
+    },
+    {
+      "title": "Intellectual Property",
+      "content": "Unless otherwise agreed in writing, all intellectual property created by the Provider in the performance of the Services shall be the property of the Client upon full payment of all fees due under this Agreement. The Provider retains the right to use general knowledge, skills, and experience gained during the performance of the Services."
+    },
+    {
+      "title": "Warranties",
+      "content": "The Provider warrants that: (a) the Services will be performed in a professional and workmanlike manner; (b) the Provider has the necessary skills, qualifications, and resources to perform the Services; and (c) the Services will conform to the specifications set forth in this Agreement. EXCEPT AS EXPRESSLY SET FORTH HEREIN, THE PROVIDER MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    {
+      "title": "Limitation of Liability",
+      "content": "THE PROVIDER'S TOTAL LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAID OR PAYABLE BY THE CLIENT UNDER THIS AGREEMENT. IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, REGARDLESS OF THE CAUSE OF ACTION OR THE THEORY OF LIABILITY."
+    },
+    {
+      "title": "Indemnification",
+      "content": "Each Party shall indemnify, defend, and hold harmless the other Party from and against any and all claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to the indemnifying Party's breach of this Agreement or negligent or wrongful acts or omissions."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Agreement shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Signatures",
+      "content": "IN WITNESS WHEREOF, the Parties have executed this Service Agreement as of the date first written above.\n\nProvider: {{provider_name}}\nSignature: ___________________________\nTitle: ___________________________\nDate: ___________________________\n\nClient: {{client_name}}\nSignature: ___________________________\nTitle: ___________________________\nDate: ___________________________"
+    }
+  ]
+}

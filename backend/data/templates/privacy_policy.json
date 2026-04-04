@@ -1,0 +1,63 @@
+{
+  "id": "privacy_policy",
+  "name": "Privacy Policy",
+  "category": "compliance",
+  "description": "A privacy policy document for websites and applications, outlining how user data is collected, used, and protected.",
+  "version": "1.0",
+  "variables": [
+    { "key": "company_name", "label": "Company Name", "type": "text", "required": true },
+    { "key": "company_address", "label": "Company Address", "type": "text", "required": true },
+    { "key": "website_url", "label": "Website URL", "type": "text", "required": true },
+    { "key": "contact_email", "label": "Contact Email", "type": "text", "required": true },
+    { "key": "effective_date", "label": "Effective Date", "type": "date", "required": true },
+    { "key": "data_retention_months", "label": "Data Retention Period (Months)", "type": "number", "required": true, "default": 24 },
+    { "key": "minimum_age", "label": "Minimum User Age", "type": "number", "required": true, "default": 13 },
+    { "key": "governing_law_state", "label": "Governing Law (State/Jurisdiction)", "type": "text", "required": true }
+  ],
+  "sections": [
+    {
+      "title": "Introduction",
+      "content": "{{company_name}} (\"we,\" \"us,\" or \"our\"), located at {{company_address}}, operates {{website_url}} (the \"Service\"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service. This Privacy Policy is effective as of {{effective_date}}.\n\nPlease read this Privacy Policy carefully. By using the Service, you agree to the collection and use of information in accordance with this policy."
+    },
+    {
+      "title": "Information We Collect",
+      "content": "We may collect the following types of information:\n\nPersonal Information: Information that can be used to identify you, including but not limited to your name, email address, postal address, phone number, and payment information.\n\nUsage Data: Information about how you use our Service, including your IP address, browser type, operating system, pages visited, time spent on pages, and other diagnostic data.\n\nCookies and Tracking Technologies: We use cookies, web beacons, and similar tracking technologies to track activity on our Service and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent."
+    },
+    {
+      "title": "How We Use Your Information",
+      "content": "We use the information we collect for the following purposes:\n\n(a) To provide, maintain, and improve our Service;\n(b) To process transactions and send related information;\n(c) To send you technical notices, updates, security alerts, and administrative messages;\n(d) To respond to your comments, questions, and customer service requests;\n(e) To communicate with you about products, services, offers, and events;\n(f) To monitor and analyze trends, usage, and activities in connection with our Service;\n(g) To detect, investigate, and prevent fraudulent transactions and other illegal activities;\n(h) To comply with legal obligations."
+    },
+    {
+      "title": "Information Sharing and Disclosure",
+      "content": "We may share your information in the following circumstances:\n\n(a) With service providers who perform services on our behalf, subject to confidentiality obligations;\n(b) In response to a request for information if we believe disclosure is required by applicable law, regulation, or legal process;\n(c) If we believe your actions are inconsistent with our user agreements or policies, or to protect the rights, property, and safety of us or others;\n(d) In connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition;\n(e) With your consent or at your direction.\n\nWe do not sell your personal information to third parties."
+    },
+    {
+      "title": "Data Security",
+      "content": "We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure, and we cannot guarantee absolute security."
+    },
+    {
+      "title": "Data Retention",
+      "content": "We will retain your personal information for a period of {{data_retention_months}} month(s) from the date of collection or last activity, unless a longer retention period is required or permitted by law. When personal information is no longer needed, we will securely delete or anonymize it."
+    },
+    {
+      "title": "Your Rights",
+      "content": "Depending on your jurisdiction, you may have the following rights regarding your personal information:\n\n(a) Right to Access: You may request a copy of the personal information we hold about you.\n(b) Right to Correction: You may request that we correct inaccurate or incomplete personal information.\n(c) Right to Deletion: You may request that we delete your personal information, subject to certain exceptions.\n(d) Right to Restrict Processing: You may request that we restrict the processing of your personal information.\n(e) Right to Data Portability: You may request a copy of your personal information in a structured, machine-readable format.\n(f) Right to Object: You may object to the processing of your personal information for certain purposes.\n\nTo exercise any of these rights, please contact us at {{contact_email}}."
+    },
+    {
+      "title": "Children's Privacy",
+      "content": "Our Service is not intended for children under the age of {{minimum_age}}. We do not knowingly collect personal information from children under {{minimum_age}}. If we become aware that we have collected personal information from a child under {{minimum_age}}, we will take steps to delete such information promptly."
+    },
+    {
+      "title": "Changes to This Privacy Policy",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the effective date. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page."
+    },
+    {
+      "title": "Governing Law",
+      "content": "This Privacy Policy shall be governed by and construed in accordance with the laws of the State of {{governing_law_state}}, without regard to its conflict of laws principles."
+    },
+    {
+      "title": "Contact Us",
+      "content": "If you have any questions about this Privacy Policy, please contact us at:\n\n{{company_name}}\n{{company_address}}\nEmail: {{contact_email}}"
+    }
+  ]
+}

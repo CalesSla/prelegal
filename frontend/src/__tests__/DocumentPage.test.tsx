@@ -1,7 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DocumentPage from "@/components/DocumentPage";
 import { Template } from "@/lib/template";
+
+const mockFetch = global.fetch as jest.Mock;
 
 // Mock html2pdf.js
 jest.mock("html2pdf.js", () => {
@@ -49,46 +51,48 @@ const ndaTemplate: Template = {
 
 describe("DocumentPage", () => {
   const onBack = jest.fn();
+  const onSaved = jest.fn();
 
   beforeEach(() => {
     onBack.mockReset();
+    onSaved.mockReset();
   });
 
   it("renders the header with template name", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     expect(screen.getByText("Prelegal")).toBeInTheDocument();
     // Template name appears in both header and preview - check at least 2 instances
     expect(screen.getAllByText("Non-Disclosure Agreement").length).toBeGreaterThanOrEqual(2);
   });
 
   it("renders the Back button", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     const backButton = screen.getByRole("button", { name: /Back/i });
     expect(backButton).toBeInTheDocument();
   });
 
   it("calls onBack when Back button is clicked", async () => {
     const user = userEvent.setup();
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     await user.click(screen.getByRole("button", { name: /Back/i }));
     expect(onBack).toHaveBeenCalled();
   });
 
   it("renders the Download PDF button", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     expect(
       screen.getByRole("button", { name: /Download PDF/i })
     ).toBeInTheDocument();
   });
 
   it("disables Download PDF button when required fields are empty", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     const button = screen.getByRole("button", { name: /Download PDF/i });
     expect(button).toBeDisabled();
   });
 
   it("renders the form with all template variables", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     expect(screen.getByLabelText(/Disclosing Party Name/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Disclosing Party Address/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Receiving Party Name/)).toBeInTheDocument();
@@ -100,13 +104,13 @@ describe("DocumentPage", () => {
   });
 
   it("renders the document preview with sections", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     expect(screen.getByText(/1\. Recitals/)).toBeInTheDocument();
   });
 
   it("updates preview when form values change", async () => {
     const user = userEvent.setup();
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     const nameInput = screen.getByLabelText(/Disclosing Party Name/);
     await user.type(nameInput, "Acme Corp");
@@ -116,7 +120,7 @@ describe("DocumentPage", () => {
   });
 
   it("shows default values in the form", () => {
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     const yearsInput = screen.getByLabelText(
       /Confidentiality Period/
     ) as HTMLInputElement;
@@ -127,7 +131,7 @@ describe("DocumentPage", () => {
   });
 
   it("shows unfilled placeholders highlighted in preview", () => {
-    const { container } = render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    const { container } = render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
     const highlights = container.querySelectorAll(
       'span[style*="background-color"]'
     );
@@ -138,7 +142,7 @@ describe("DocumentPage", () => {
 
   it("enables Download PDF button when all required fields are filled", async () => {
     const user = userEvent.setup();
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme Corp");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "123 Main St");
@@ -153,7 +157,7 @@ describe("DocumentPage", () => {
 
   it("generates PDF with generic filename", async () => {
     const user = userEvent.setup();
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme Corp");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "123 Main St");
@@ -185,7 +189,7 @@ describe("DocumentPage", () => {
       })
     );
 
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
@@ -209,7 +213,7 @@ describe("DocumentPage", () => {
     const html2pdf = (await import("html2pdf.js")) as any;
     html2pdf._mockSave.mockRejectedValueOnce(new Error("PDF engine error"));
 
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
@@ -235,7 +239,7 @@ describe("DocumentPage", () => {
 
   it("keeps button disabled when required field has only whitespace", async () => {
     const user = userEvent.setup();
-    render(<DocumentPage template={ndaTemplate} onBack={onBack} />);
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
 
     await user.type(screen.getByLabelText(/Disclosing Party Name/), "Acme");
     await user.type(screen.getByLabelText(/Disclosing Party Address/), "Addr");
@@ -246,5 +250,95 @@ describe("DocumentPage", () => {
 
     const button = screen.getByRole("button", { name: /Download PDF/i });
     expect(button).toBeDisabled();
+  });
+
+  it("renders the Save Document button", () => {
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
+    expect(screen.getByRole("button", { name: /Save Document/i })).toBeInTheDocument();
+  });
+
+  it("saves a new document on first save", async () => {
+    const user = userEvent.setup();
+    const mockDoc = { id: 42, template_id: "nda", title: "NDA", values: {}, created_at: "", updated_at: "" };
+
+    mockFetch.mockImplementation((url: string, opts?: RequestInit) => {
+      if (url === "/api/documents" && opts?.method === "POST") {
+        return Promise.resolve({ ok: true, json: async () => mockDoc });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ message: "Hello!" }) });
+    });
+
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
+
+    await user.click(screen.getByRole("button", { name: /Save Document/i }));
+
+    await waitFor(() => {
+      expect(onSaved).toHaveBeenCalledWith(42, expect.any(Object));
+    });
+  });
+
+  it("updates an existing document when savedDoc is provided", async () => {
+    const user = userEvent.setup();
+    const savedDoc = { id: 10, values: { disclosing_party_name: "Acme" } };
+    const mockDoc = { id: 10, template_id: "nda", title: "NDA", values: savedDoc.values, created_at: "", updated_at: "" };
+
+    mockFetch.mockImplementation((url: string, opts?: RequestInit) => {
+      if (url === "/api/documents/10" && opts?.method === "PUT") {
+        return Promise.resolve({ ok: true, json: async () => mockDoc });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ message: "Hello!" }) });
+    });
+
+    render(<DocumentPage template={ndaTemplate} savedDoc={savedDoc} onSaved={onSaved} onBack={onBack} />);
+
+    await user.click(screen.getByRole("button", { name: /Save Document/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Saved" })).toBeInTheDocument();
+    });
+  });
+
+  it("shows Saving... state during save", async () => {
+    const user = userEvent.setup();
+
+    mockFetch.mockImplementation((url: string, opts?: RequestInit) => {
+      if (url === "/api/documents" && opts?.method === "POST") {
+        return new Promise(() => {}); // never resolves
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ message: "Hello!" }) });
+    });
+
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
+
+    await user.click(screen.getByRole("button", { name: /Save Document/i }));
+
+    expect(screen.getByRole("button", { name: "Saving..." })).toBeDisabled();
+  });
+
+  it("shows Save failed on error", async () => {
+    const user = userEvent.setup();
+
+    mockFetch.mockImplementation((url: string, opts?: RequestInit) => {
+      if (url === "/api/documents" && opts?.method === "POST") {
+        return Promise.resolve({ ok: false, json: async () => ({ detail: "Error" }) });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ message: "Hello!" }) });
+    });
+
+    render(<DocumentPage template={ndaTemplate} savedDoc={null} onSaved={onSaved} onBack={onBack} />);
+
+    await user.click(screen.getByRole("button", { name: /Save Document/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Save failed" })).toBeInTheDocument();
+    });
+  });
+
+  it("initializes form with saved document values", () => {
+    const savedDoc = { id: 10, values: { disclosing_party_name: "Saved Corp" } };
+    render(<DocumentPage template={ndaTemplate} savedDoc={savedDoc} onSaved={onSaved} onBack={onBack} />);
+
+    const nameInput = screen.getByLabelText(/Disclosing Party Name/) as HTMLInputElement;
+    expect(nameInput.value).toBe("Saved Corp");
   });
 });

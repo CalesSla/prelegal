@@ -2,21 +2,30 @@
 
 import { useRef, useState, useCallback } from "react";
 import { Template, getDefaultValues } from "@/lib/template";
+import { SavedDoc, createDocument, updateDocument } from "@/lib/api";
 import DocumentForm from "./DocumentForm";
 import DocumentPreview from "./DocumentPreview";
 import ChatPanel from "./ChatPanel";
 
 interface DocumentPageProps {
   template: Template;
+  savedDoc: SavedDoc | null;
+  onSaved: (id: number, values: Record<string, string>) => void;
   onBack: () => void;
 }
 
-export default function DocumentPage({ template, onBack }: DocumentPageProps) {
-  const [values, setValues] = useState<Record<string, string>>(() =>
-    getDefaultValues(template)
-  );
+export default function DocumentPage({ template, savedDoc, onSaved, onBack }: DocumentPageProps) {
+  const [values, setValues] = useState<Record<string, string>>(() => ({
+    ...getDefaultValues(template),
+    ...(savedDoc?.values || {}),
+  }));
+  const [savedDocId, setSavedDocId] = useState<number | null>(savedDoc?.id ?? null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const valuesRef = useRef(values);
+  valuesRef.current = values;
 
   const handleChange = useCallback((key: string, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -28,6 +37,27 @@ export default function DocumentPage({ template, onBack }: DocumentPageProps) {
     },
     [],
   );
+
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    setSaveStatus(null);
+    try {
+      if (savedDocId) {
+        await updateDocument(savedDocId, valuesRef.current);
+      } else {
+        const doc = await createDocument(template.id, template.name, valuesRef.current);
+        setSavedDocId(doc.id);
+        onSaved(doc.id, valuesRef.current);
+      }
+      setSaveStatus("Saved");
+      setTimeout(() => setSaveStatus(null), 2000);
+    } catch {
+      setSaveStatus("Save failed");
+      setTimeout(() => setSaveStatus(null), 3000);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [savedDocId, template, onSaved]);
 
   const handleDownload = useCallback(async () => {
     const element = previewRef.current;
@@ -110,14 +140,24 @@ export default function DocumentPage({ template, onBack }: DocumentPageProps) {
               </p>
             </div>
           </div>
-          <button
-            onClick={handleDownload}
-            disabled={!allRequiredFilled || isDownloading}
-            className="px-5 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            style={{ backgroundColor: "#753991" }}
-          >
-            {isDownloading ? "Generating..." : "Download PDF"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="px-5 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: "#209dd7" }}
+            >
+              {isSaving ? "Saving..." : saveStatus || "Save Document"}
+            </button>
+            <button
+              onClick={handleDownload}
+              disabled={!allRequiredFilled || isDownloading}
+              className="px-5 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: "#753991" }}
+            >
+              {isDownloading ? "Generating..." : "Download PDF"}
+            </button>
+          </div>
         </div>
       </header>
       <main className="max-w-[1400px] mx-auto px-6 py-8">
@@ -143,6 +183,7 @@ export default function DocumentPage({ template, onBack }: DocumentPageProps) {
               variables={template.variables}
               values={values}
               previewRef={previewRef}
+              showDisclaimer
             />
           </section>
         </div>

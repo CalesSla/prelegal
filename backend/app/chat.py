@@ -1,25 +1,15 @@
-"""Chat endpoints with AI-powered NDA field extraction."""
+"""Chat endpoints with AI-powered document field extraction."""
 
-import json
 from fastapi import APIRouter
 from pydantic import BaseModel
 from litellm import completion
+
+from app.template_loader import load_template
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 MODEL = "openrouter/openai/gpt-oss-120b"
 EXTRA_BODY = {"provider": {"order": ["cerebras"]}}
-
-NDA_FIELDS = [
-    ("disclosing_party_name", "Disclosing Party Name", "text"),
-    ("disclosing_party_address", "Disclosing Party Address", "text"),
-    ("receiving_party_name", "Receiving Party Name", "text"),
-    ("receiving_party_address", "Receiving Party Address", "text"),
-    ("effective_date", "Effective Date", "date (YYYY-MM-DD format)"),
-    ("confidentiality_period_years", "Confidentiality Period in Years", "number"),
-    ("governing_law_state", "Governing Law State/Jurisdiction", "text"),
-    ("nda_type", "NDA Type", "select: mutual or one-way"),
-]
 
 
 class ChatMessageItem(BaseModel):
@@ -30,36 +20,37 @@ class ChatMessageItem(BaseModel):
 class ChatRequest(BaseModel):
     messages: list[ChatMessageItem]
     current_fields: dict[str, str]
-
-
-class ExtractedFields(BaseModel):
-    disclosing_party_name: str | None = None
-    disclosing_party_address: str | None = None
-    receiving_party_name: str | None = None
-    receiving_party_address: str | None = None
-    effective_date: str | None = None
-    confidentiality_period_years: str | None = None
-    governing_law_state: str | None = None
-    nda_type: str | None = None
+    template_id: str
 
 
 class ChatResponse(BaseModel):
     reply: str
-    extracted_fields: ExtractedFields
+    extracted_fields: dict[str, str | None]
 
 
-def _build_system_prompt(current_fields: dict[str, str]) -> str:
+def _build_system_prompt(template: dict, current_fields: dict[str, str]) -> str:
     field_status_lines = []
-    for key, label, field_type in NDA_FIELDS:
+    for var in template["variables"]:
+        key = var["key"]
+        label = var["label"]
+        var_type = var["type"]
+        type_hint = var_type
+        if var_type == "select" and "options" in var:
+            type_hint = f"select: {' or '.join(var['options'])}"
+        elif var_type == "date":
+            type_hint = "date (YYYY-MM-DD format)"
+
         value = current_fields.get(key, "")
         status = f'"{value}"' if value else "EMPTY"
-        field_status_lines.append(f"  - {key} ({label}, {field_type}): {status}")
+        field_status_lines.append(f"  - {key} ({label}, {type_hint}): {status}")
     field_status = "\n".join(field_status_lines)
 
-    return f"""You are a friendly legal document assistant helping draft a Non-Disclosure Agreement (NDA).
+    template_name = template["name"]
+
+    return f"""You are a friendly legal document assistant helping draft a {template_name}.
 
 Your job:
-1. Have a natural conversation to gather the information needed for the NDA fields below.
+1. Have a natural conversation to gather the information needed for the fields below.
 2. Extract field values from the user's messages whenever they provide relevant information.
 3. Proactively ask about unfilled fields, one or two at a time. Don't overwhelm the user.
 4. Confirm values you extract so the user can correct if needed.
@@ -69,27 +60,39 @@ Current field status:
 
 Rules for extracted_fields:
 - Set a field value ONLY when the user clearly provides that information.
-- For effective_date, use YYYY-MM-DD format.
-- For confidentiality_period_years, use just the number as a string.
-- For nda_type, use exactly "mutual" or "one-way".
+- For date fields, use YYYY-MM-DD format.
+- For number fields, use just the number as a string.
+- For select fields, use exactly one of the allowed options.
 - Set fields to null if the user did not mention them in this message.
 - Do not re-extract fields that already have values unless the user is correcting them.
+- Only use the field keys listed above. Do not invent new keys.
 
-When all fields are filled, let the user know their NDA is ready and they can download it as PDF."""
+When all fields are filled, let the user know their {template_name} is ready and they can download it as PDF.
+
+If the user asks about a different type of document, let them know they can go back to the template selection page to choose a different document type."""
 
 
 @router.get("/greeting")
-async def greeting():
+async def greeting(template_id: str = "nda"):
+    template = load_template(template_id)
+    name = template["name"] if template else "legal document"
     return {
-        "message": "Hello! I'm your legal document assistant. "
-        "I'll help you draft a Non-Disclosure Agreement. "
-        "Let's start -- who are the parties involved in this NDA?"
+        "message": f"Hello! I'm your legal document assistant. "
+        f"I'll help you draft a {name}. "
+        f"Let's start -- what information do you have for this document?"
     }
 
 
 @router.post("/message", response_model=ChatResponse)
 async def message(body: ChatRequest):
-    system_prompt = _build_system_prompt(body.current_fields)
+    template = load_template(body.template_id)
+    if not template:
+        return ChatResponse(
+            reply="I couldn't find that template. Please go back and select a valid document type.",
+            extracted_fields={},
+        )
+
+    system_prompt = _build_system_prompt(template, body.current_fields)
     messages = [{"role": "system", "content": system_prompt}]
     for msg in body.messages:
         messages.append({"role": msg.role, "content": msg.content})

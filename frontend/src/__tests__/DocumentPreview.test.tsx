@@ -1,7 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { createRef } from "react";
-import NdaPreview from "@/components/NdaPreview";
-import { TemplateSection } from "@/lib/template";
+import DocumentPreview from "@/components/DocumentPreview";
+import { TemplateSection, TemplateVariable } from "@/lib/template";
+
+const mockVariables: TemplateVariable[] = [
+  { key: "nda_type", label: "NDA Type", type: "select", required: true, options: ["mutual", "one-way"], default: "mutual" },
+  { key: "effective_date", label: "Effective Date", type: "date", required: true },
+  { key: "disclosing_party_name", label: "Disclosing Party Name", type: "text", required: true },
+  { key: "receiving_party_name", label: "Receiving Party Name", type: "text", required: true },
+  { key: "confidentiality_period_years", label: "Confidentiality Period (Years)", type: "number", required: true },
+  { key: "governing_law_state", label: "Governing Law", type: "text", required: true },
+];
 
 const mockSections: TemplateSection[] = [
   {
@@ -39,19 +48,20 @@ const emptyValues: Record<string, string> = {
   governing_law_state: "",
 };
 
-function renderPreview(values: Record<string, string>, sections = mockSections) {
+function renderPreview(values: Record<string, string>, sections = mockSections, variables = mockVariables) {
   const ref = createRef<HTMLDivElement>();
   return render(
-    <NdaPreview
+    <DocumentPreview
       title="Non-Disclosure Agreement"
       sections={sections}
+      variables={variables}
       values={values}
       previewRef={ref}
     />
   );
 }
 
-describe("NdaPreview", () => {
+describe("DocumentPreview", () => {
   it("renders the document title", () => {
     renderPreview(filledValues);
     expect(
@@ -79,12 +89,12 @@ describe("NdaPreview", () => {
     expect(screen.getByText(/April 4, 2026/)).toBeInTheDocument();
   });
 
-  it("formats nda_type as capitalized value", () => {
+  it("formats select values with capitalization", () => {
     renderPreview(filledValues);
     expect(screen.getByText(/Mutual NDA/)).toBeInTheDocument();
   });
 
-  it("formats one-way nda_type correctly", () => {
+  it("formats hyphenated select values correctly", () => {
     renderPreview({ ...filledValues, nda_type: "one-way" });
     expect(screen.getByText(/One-Way NDA/)).toBeInTheDocument();
   });
@@ -126,9 +136,10 @@ describe("NdaPreview", () => {
   it("attaches the previewRef to the container div", () => {
     const ref = createRef<HTMLDivElement>();
     render(
-      <NdaPreview
+      <DocumentPreview
         title="Test"
         sections={mockSections}
+        variables={mockVariables}
         values={filledValues}
         previewRef={ref}
       />

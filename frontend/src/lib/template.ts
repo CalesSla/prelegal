@@ -1,9 +1,7 @@
-import ndaTemplate from "@/data/nda.json";
-
 export interface TemplateVariable {
   key: string;
   label: string;
-  type: "text" | "date" | "number" | "select";
+  type: "text" | "date" | "number" | "select" | "textarea";
   required: boolean;
   default?: string | number;
   options?: string[];
@@ -24,8 +22,15 @@ export interface Template {
   sections: TemplateSection[];
 }
 
-export function getTemplate(): Template {
-  return ndaTemplate as Template;
+export interface TemplateSummary {
+  id: string;
+  name: string;
+  category: string;
+}
+
+export interface CategoryInfo {
+  id: string;
+  label: string;
 }
 
 export function getDefaultValues(template: Template): Record<string, string> {
@@ -36,29 +41,41 @@ export function getDefaultValues(template: Template): Record<string, string> {
   return defaults;
 }
 
-function formatValue(key: string, value: string): string {
-  if (key.includes("date") && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+function capitalize(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+function formatValue(key: string, value: string, variables: TemplateVariable[]): string {
+  const variable = variables.find((v) => v.key === key);
+  if (variable?.type === "date" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
     const [y, m, d] = value.split("-");
     return new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString(
       "en-US",
       { year: "numeric", month: "long", day: "numeric" }
     );
   }
-  if (key === "nda_type") {
-    const labels: Record<string, string> = { mutual: "Mutual", "one-way": "One-Way" };
-    return labels[value] ?? value;
+  if (!variable && key.includes("date") && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [y, m, d] = value.split("-");
+    return new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString(
+      "en-US",
+      { year: "numeric", month: "long", day: "numeric" }
+    );
+  }
+  if (variable?.type === "select") {
+    return value.split("-").map(capitalize).join("-");
   }
   return value;
 }
 
 export function fillTemplate(
   content: string,
-  values: Record<string, string>
+  values: Record<string, string>,
+  variables: TemplateVariable[] = []
 ): string {
   return content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
     const value = values[key];
     if (value != null && value !== "") {
-      return formatValue(key, value);
+      return formatValue(key, value, variables);
     }
     return match;
   });

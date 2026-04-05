@@ -1,85 +1,76 @@
-import { getTemplate, getDefaultValues, fillTemplate, Template } from "@/lib/template";
+import { getDefaultValues, fillTemplate, Template, TemplateVariable } from "@/lib/template";
 
-describe("getTemplate", () => {
-  it("returns a valid template object", () => {
-    const template = getTemplate();
-    expect(template).toBeDefined();
-    expect(template.id).toBe("nda");
-    expect(template.name).toBe("Non-Disclosure Agreement");
-    expect(template.category).toBe("confidentiality");
-  });
+const ndaSelectVariable: TemplateVariable = {
+  key: "nda_type",
+  label: "NDA Type",
+  type: "select",
+  required: true,
+  options: ["mutual", "one-way"],
+  default: "mutual",
+};
 
-  it("has the expected variables", () => {
-    const template = getTemplate();
-    const keys = template.variables.map((v) => v.key);
-    expect(keys).toContain("disclosing_party_name");
-    expect(keys).toContain("disclosing_party_address");
-    expect(keys).toContain("receiving_party_name");
-    expect(keys).toContain("receiving_party_address");
-    expect(keys).toContain("effective_date");
-    expect(keys).toContain("confidentiality_period_years");
-    expect(keys).toContain("governing_law_state");
-    expect(keys).toContain("nda_type");
-  });
-
-  it("has all required variable metadata", () => {
-    const template = getTemplate();
-    for (const variable of template.variables) {
-      expect(variable.key).toBeTruthy();
-      expect(variable.label).toBeTruthy();
-      expect(["text", "date", "number", "select"]).toContain(variable.type);
-      expect(typeof variable.required).toBe("boolean");
-    }
-  });
-
-  it("has sections with title and content", () => {
-    const template = getTemplate();
-    expect(template.sections.length).toBeGreaterThan(0);
-    for (const section of template.sections) {
-      expect(section.title).toBeTruthy();
-      expect(section.content).toBeTruthy();
-    }
-  });
-
-  it("has the nda_type select variable with correct options", () => {
-    const template = getTemplate();
-    const ndaType = template.variables.find((v) => v.key === "nda_type");
-    expect(ndaType).toBeDefined();
-    expect(ndaType!.type).toBe("select");
-    expect(ndaType!.options).toEqual(["mutual", "one-way"]);
-    expect(ndaType!.default).toBe("mutual");
-  });
-
-  it("has the {{nda_type}} placeholder in the Recitals section", () => {
-    const template = getTemplate();
-    const recitals = template.sections.find((s) => s.title === "Recitals");
-    expect(recitals).toBeDefined();
-    expect(recitals!.content).toContain("{{nda_type}}");
-  });
-});
+const payFrequencyVariable: TemplateVariable = {
+  key: "pay_frequency",
+  label: "Pay Frequency",
+  type: "select",
+  required: true,
+  options: ["weekly", "bi-weekly", "semi-monthly", "monthly"],
+  default: "bi-weekly",
+};
 
 describe("getDefaultValues", () => {
   it("returns defaults for all variables", () => {
-    const template = getTemplate();
+    const template: Template = {
+      id: "test",
+      name: "Test",
+      category: "test",
+      description: "test",
+      version: "1.0",
+      variables: [
+        { key: "a", label: "A", type: "text", required: true },
+        { key: "b", label: "B", type: "number", required: true, default: 5 },
+      ],
+      sections: [],
+    };
     const defaults = getDefaultValues(template);
-    for (const variable of template.variables) {
-      expect(variable.key in defaults).toBe(true);
-    }
+    expect(defaults.a).toBe("");
+    expect(defaults.b).toBe("5");
   });
 
   it("uses provided default values as strings", () => {
-    const template = getTemplate();
+    const template: Template = {
+      id: "test",
+      name: "Test",
+      category: "test",
+      description: "test",
+      version: "1.0",
+      variables: [
+        { key: "years", label: "Years", type: "number", required: true, default: 2 },
+        ndaSelectVariable,
+      ],
+      sections: [],
+    };
     const defaults = getDefaultValues(template);
-    expect(defaults.confidentiality_period_years).toBe("2");
+    expect(defaults.years).toBe("2");
     expect(defaults.nda_type).toBe("mutual");
   });
 
   it("uses empty string for variables without defaults", () => {
-    const template = getTemplate();
+    const template: Template = {
+      id: "test",
+      name: "Test",
+      category: "test",
+      description: "test",
+      version: "1.0",
+      variables: [
+        { key: "name", label: "Name", type: "text", required: true },
+        { key: "date", label: "Date", type: "date", required: true },
+      ],
+      sections: [],
+    };
     const defaults = getDefaultValues(template);
-    expect(defaults.disclosing_party_name).toBe("");
-    expect(defaults.receiving_party_name).toBe("");
-    expect(defaults.effective_date).toBe("");
+    expect(defaults.name).toBe("");
+    expect(defaults.date).toBe("");
   });
 
   it("handles a custom template with mixed defaults", () => {
@@ -160,25 +151,46 @@ describe("fillTemplate", () => {
     expect(result).toBe("Date: TBD.");
   });
 
-  it("formats nda_type 'mutual' as 'Mutual'", () => {
-    const result = fillTemplate("This is a {{nda_type}} NDA.", {
-      nda_type: "mutual",
-    });
+  it("formats select values with capitalization when variables provided", () => {
+    const result = fillTemplate(
+      "This is a {{nda_type}} NDA.",
+      { nda_type: "mutual" },
+      [ndaSelectVariable]
+    );
     expect(result).toBe("This is a Mutual NDA.");
   });
 
-  it("formats nda_type 'one-way' as 'One-Way'", () => {
-    const result = fillTemplate("This is a {{nda_type}} NDA.", {
-      nda_type: "one-way",
-    });
+  it("formats hyphenated select values correctly", () => {
+    const result = fillTemplate(
+      "This is a {{nda_type}} NDA.",
+      { nda_type: "one-way" },
+      [ndaSelectVariable]
+    );
     expect(result).toBe("This is a One-Way NDA.");
   });
 
-  it("passes through unknown nda_type values as-is", () => {
-    const result = fillTemplate("This is a {{nda_type}} NDA.", {
-      nda_type: "trilateral",
-    });
-    expect(result).toBe("This is a trilateral NDA.");
+  it("formats bi-weekly select value correctly", () => {
+    const result = fillTemplate(
+      "Paid {{pay_frequency}}.",
+      { pay_frequency: "bi-weekly" },
+      [payFrequencyVariable]
+    );
+    expect(result).toBe("Paid Bi-Weekly.");
+  });
+
+  it("does not capitalize non-select values", () => {
+    const textVar: TemplateVariable = {
+      key: "name",
+      label: "Name",
+      type: "text",
+      required: true,
+    };
+    const result = fillTemplate(
+      "Name: {{name}}.",
+      { name: "alice" },
+      [textVar]
+    );
+    expect(result).toBe("Name: alice.");
   });
 
   it("handles a real template section with multiple variables", () => {

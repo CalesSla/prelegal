@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import NdaForm from "@/components/NdaForm";
+import DocumentForm from "@/components/DocumentForm";
 import { TemplateVariable } from "@/lib/template";
 
 const mockVariables: TemplateVariable[] = [
@@ -22,6 +22,12 @@ const mockVariables: TemplateVariable[] = [
     options: ["mutual", "one-way"],
     default: "mutual",
   },
+  {
+    key: "description",
+    label: "Description",
+    type: "textarea",
+    required: false,
+  },
 ];
 
 const defaultValues: Record<string, string> = {
@@ -30,16 +36,16 @@ const defaultValues: Record<string, string> = {
   start_date: "",
   years: "2",
   nda_type: "mutual",
+  description: "",
 };
 
-describe("NdaForm", () => {
+describe("DocumentForm", () => {
   it("renders all variable labels", () => {
-    const onChange = jest.fn();
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
-        onChange={onChange}
+        onChange={jest.fn()}
       />
     );
 
@@ -48,11 +54,12 @@ describe("NdaForm", () => {
     expect(screen.getByLabelText(/Start Date/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Number of Years/)).toBeInTheDocument();
     expect(screen.getByLabelText(/NDA Type/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Description/)).toBeInTheDocument();
   });
 
   it("renders the form heading", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -63,7 +70,7 @@ describe("NdaForm", () => {
 
   it("shows required asterisk for required fields", () => {
     const { container } = render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -75,23 +82,9 @@ describe("NdaForm", () => {
     expect(asterisks.length).toBe(4);
   });
 
-  it("does not show required asterisk for optional fields", () => {
-    render(
-      <NdaForm
-        variables={[
-          { key: "opt", label: "Optional Field", type: "text", required: false },
-        ]}
-        values={{ opt: "" }}
-        onChange={jest.fn()}
-      />
-    );
-    const label = screen.getByText("Optional Field");
-    expect(label.querySelector(".text-red-500")).toBeNull();
-  });
-
   it("renders text input for text type", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -103,7 +96,7 @@ describe("NdaForm", () => {
 
   it("renders date input for date type", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -115,7 +108,7 @@ describe("NdaForm", () => {
 
   it("renders number input for number type", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -128,7 +121,7 @@ describe("NdaForm", () => {
 
   it("renders select for select type with correct options", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -140,9 +133,22 @@ describe("NdaForm", () => {
     expect(options).toEqual(["mutual", "one-way"]);
   });
 
+  it("renders textarea for textarea type", () => {
+    render(
+      <DocumentForm
+        variables={mockVariables}
+        values={defaultValues}
+        onChange={jest.fn()}
+      />
+    );
+    const textarea = screen.getByLabelText(/Description/) as HTMLTextAreaElement;
+    expect(textarea.tagName).toBe("TEXTAREA");
+    expect(textarea.rows).toBe(4);
+  });
+
   it("capitalizes select option labels", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -156,7 +162,7 @@ describe("NdaForm", () => {
   it("displays current values in inputs", () => {
     const values = { ...defaultValues, name: "Alice Corp", years: "5" };
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={values}
         onChange={jest.fn()}
@@ -174,7 +180,7 @@ describe("NdaForm", () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={onChange}
@@ -190,7 +196,7 @@ describe("NdaForm", () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={onChange}
@@ -202,27 +208,26 @@ describe("NdaForm", () => {
     expect(onChange).toHaveBeenCalledWith("nda_type", "one-way");
   });
 
-  it("calls onChange when number input changes", async () => {
+  it("calls onChange when textarea changes", async () => {
     const user = userEvent.setup();
     const onChange = jest.fn();
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={onChange}
       />
     );
 
-    const input = screen.getByLabelText(/Number of Years/);
-    await user.clear(input);
-    // After clear, onChange is called with empty string
-    expect(onChange).toHaveBeenCalledWith("years", "");
+    const textarea = screen.getByLabelText(/Description/);
+    await user.type(textarea, "A");
+    expect(onChange).toHaveBeenCalledWith("description", "A");
   });
 
   it("does not submit the form on enter", async () => {
     const user = userEvent.setup();
     const { container } = render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -239,13 +244,13 @@ describe("NdaForm", () => {
   });
 
   it("renders with empty variables array", () => {
-    render(<NdaForm variables={[]} values={{}} onChange={jest.fn()} />);
+    render(<DocumentForm variables={[]} values={{}} onChange={jest.fn()} />);
     expect(screen.getByText("Document Details")).toBeInTheDocument();
   });
 
   it("sets placeholder on text inputs", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -257,7 +262,7 @@ describe("NdaForm", () => {
 
   it("sets required attribute on required inputs", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
@@ -271,12 +276,13 @@ describe("NdaForm", () => {
 
   it("does not set required attribute on optional inputs", () => {
     render(
-      <NdaForm
+      <DocumentForm
         variables={mockVariables}
         values={defaultValues}
         onChange={jest.fn()}
       />
     );
     expect((screen.getByLabelText(/Address/) as HTMLInputElement).required).toBe(false);
+    expect((screen.getByLabelText(/Description/) as HTMLTextAreaElement).required).toBe(false);
   });
 });

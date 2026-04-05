@@ -8,11 +8,13 @@ interface ChatMessage {
 }
 
 interface ChatPanelProps {
+  templateId: string;
   fieldValues: Record<string, string>;
   onFieldsExtracted: (fields: Record<string, string>) => void;
 }
 
 export default function ChatPanel({
+  templateId,
   fieldValues,
   onFieldsExtracted,
 }: ChatPanelProps) {
@@ -30,7 +32,7 @@ export default function ChatPanel({
   }, [messages]);
 
   useEffect(() => {
-    fetch("/api/chat/greeting")
+    fetch(`/api/chat/greeting?template_id=${templateId}`)
       .then((res) => res.json())
       .then((data) => {
         setMessages([{ role: "assistant", content: data.message }]);
@@ -40,11 +42,11 @@ export default function ChatPanel({
           {
             role: "assistant",
             content:
-              "Hello! I'm your legal document assistant. Tell me about the NDA you need.",
+              "Hello! I'm your legal document assistant. Tell me about the document you need.",
           },
         ]);
       });
-  }, []);
+  }, [templateId]);
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -63,6 +65,7 @@ export default function ChatPanel({
               content: m.content,
             })),
             current_fields: fieldValuesRef.current,
+            template_id: templateId,
           }),
         });
 

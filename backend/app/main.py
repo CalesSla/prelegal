@@ -10,6 +10,7 @@ from app.auth import router as auth_router
 from app.documents import router as documents_router
 from app.chat import router as chat_router
 from app.health import router as health_router
+from app.templates import router as templates_router
 
 STATIC_DIR = Path(__file__).parent.parent / "static"
 
@@ -26,6 +27,7 @@ app.include_router(auth_router)
 app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(health_router)
+app.include_router(templates_router)
 
 if STATIC_DIR.is_dir():
     app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")

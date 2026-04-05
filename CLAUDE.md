@@ -56,6 +56,7 @@ Backend available at http://localhost:8000
 
 ## Implementation Status
 
+
 ### Current API Endpoints
 - `POST /api/auth/signup` - Create new user account
 - `POST /api/auth/signin` - Sign in and receive JWT cookie

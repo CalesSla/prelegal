@@ -4,6 +4,7 @@ import { useRef, useState, useCallback } from "react";
 import { getTemplate, getDefaultValues, fillTemplate } from "@/lib/template";
 import NdaForm from "./NdaForm";
 import NdaPreview from "./NdaPreview";
+import ChatPanel from "./ChatPanel";
 
 export default function NdaPage() {
   const [template] = useState(() => getTemplate());
@@ -16,6 +17,13 @@ export default function NdaPage() {
   const handleChange = useCallback((key: string, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
   }, []);
+
+  const handleFieldsExtracted = useCallback(
+    (fields: Record<string, string>) => {
+      setValues((prev) => ({ ...prev, ...fields }));
+    },
+    [],
+  );
 
   const handleDownload = useCallback(async () => {
     const element = previewRef.current;
@@ -86,14 +94,15 @@ export default function NdaPage() {
           <button
             onClick={handleDownload}
             disabled={!allRequiredFilled || isDownloading}
-            className="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="px-5 py-2 text-white text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            style={{ backgroundColor: "#753991" }}
           >
             {isDownloading ? "Generating..." : "Download PDF"}
           </button>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8">
+      <main className="max-w-[1400px] mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)_minmax(0,1fr)] gap-6">
           <aside className="bg-white rounded-lg border border-gray-200 p-6 h-fit lg:sticky lg:top-8">
             <NdaForm
               variables={template.variables}
@@ -101,6 +110,12 @@ export default function NdaPage() {
               onChange={handleChange}
             />
           </aside>
+          <div className="lg:h-[calc(100vh-140px)] lg:sticky lg:top-8">
+            <ChatPanel
+              fieldValues={values}
+              onFieldsExtracted={handleFieldsExtracted}
+            />
+          </div>
           <section>
             <NdaPreview
               title={template.name}

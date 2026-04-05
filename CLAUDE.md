@@ -8,7 +8,7 @@ The available documents are covered in the catalog.json file in the project root
 
 @catalog.json
 
-The current implementation supports all 11 document types via AI chat with full user authentication and document persistence.
+The frontend currently supports the NDA template only. The backend provides auth and document persistence. AI chat endpoints exist as stubs.
 
 ## Development process
 
@@ -56,6 +56,27 @@ Backend available at http://localhost:8000
 
 ## Implementation Status
 
+### V1 Foundation (PL-4) - Complete
+- FastAPI backend (`backend/app/`) with uv project
+- SQLite database (async SQLAlchemy) with User and Document models
+- JWT cookie-based auth (bcrypt password hashing)
+- Document CRUD with user ownership enforcement
+- Multi-stage Dockerfile: static Next.js export served via FastAPI
+- docker-compose.yml and start/stop scripts for Mac/Linux/Windows
+
+### AI Chat for NDA (PL-5) - Complete
+- AI chat integration via LiteLLM + OpenRouter (Cerebras inference, gpt-oss-120b model)
+- Structured outputs for field extraction from natural conversation
+- ChatPanel component with 3-column layout (form | chat | preview)
+- Live preview updates as AI extracts NDA field values
+- AI proactively asks about unfilled fields
+- Graceful error handling for network/API failures
+- 20 backend tests, 86 frontend tests
+
+### Not Yet Implemented
+- Multi-template frontend (only NDA currently)
+- Frontend auth UI (signup/signin)
+- Frontend-backend integration (document save)
 
 ### Current API Endpoints
 - `POST /api/auth/signup` - Create new user account
@@ -67,6 +88,6 @@ Backend available at http://localhost:8000
 - `GET /api/documents/{id}` - Get specific document (auth required)
 - `PUT /api/documents/{id}` - Update document (auth required)
 - `DELETE /api/documents/{id}` - Delete document (auth required)
-- `GET /api/chat/greeting` - Get AI greeting
-- `POST /api/chat/message` - Send chat message and get AI response
+- `GET /api/chat/greeting` - Get AI greeting for NDA drafting
+- `POST /api/chat/message` - Send chat message, returns AI reply + extracted NDA fields
 - `GET /api/health` - Health check

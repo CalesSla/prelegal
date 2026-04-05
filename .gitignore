@@ -58,6 +58,9 @@ Thumbs.db
 # Docker
 docker-compose.override.yml
 
+# Database
+*.db
+
 # Misc
 *.log
 *.pid

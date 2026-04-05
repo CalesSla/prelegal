@@ -1,10 +1,11 @@
 "use client";
 
-import { fillTemplate, TemplateSection } from "@/lib/template";
+import { fillTemplate, TemplateSection, TemplateVariable } from "@/lib/template";
 
-interface NdaPreviewProps {
+interface DocumentPreviewProps {
   title: string;
   sections: TemplateSection[];
+  variables: TemplateVariable[];
   values: Record<string, string>;
   previewRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -25,9 +26,10 @@ function highlightUnfilled(text: string): React.ReactNode[] {
 
 function renderContent(
   content: string,
-  values: Record<string, string>
+  values: Record<string, string>,
+  variables: TemplateVariable[]
 ): React.ReactNode {
-  const filled = fillTemplate(content, values);
+  const filled = fillTemplate(content, values, variables);
   const paragraphs = filled.split("\n\n");
   return paragraphs.map((para, i) => {
     const lines = para.split("\n");
@@ -44,12 +46,13 @@ function renderContent(
   });
 }
 
-export default function NdaPreview({
+export default function DocumentPreview({
   title,
   sections,
+  variables,
   values,
   previewRef,
-}: NdaPreviewProps) {
+}: DocumentPreviewProps) {
   return (
     <div
       ref={previewRef}
@@ -70,7 +73,7 @@ export default function NdaPreview({
             {index + 1}. {section.title}
           </h2>
           <div className="text-sm" style={{ color: "#1f2937" }}>
-            {renderContent(section.content, values)}
+            {renderContent(section.content, values, variables)}
           </div>
         </div>
       ))}

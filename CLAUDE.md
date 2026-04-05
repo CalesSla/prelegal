@@ -4,11 +4,11 @@
 
 This is a SaaS product to allow users to draft legal agreements based on templates in the templates directory.
 The user can carry out AI chat in order to establish what document they want and how to fill in the fields.
-The available documents are covered in the catalog.json file in the project root, included here:
+The available documents are covered in the template index file:
 
-@catalog.json
+@backend/data/templates/index.json
 
-The frontend currently supports the NDA template only. The backend provides auth and document persistence. AI chat endpoints exist as stubs.
+The frontend currently supports the NDA template only. The backend provides auth and document persistence. AI chat is wired to LiteLLM via OpenRouter (Cerebras inference).
 
 ## Development process
 
@@ -73,8 +73,16 @@ Backend available at http://localhost:8000
 - Graceful error handling for network/API failures
 - 20 backend tests, 86 frontend tests
 
+### Multi-Template Support (PL-6) - Complete
+- Template selection landing page grouped by category (10 templates)
+- Generic DocumentPage, DocumentForm, DocumentPreview components
+- Backend templates API: list and retrieve any template
+- Template-aware AI chat: dynamic system prompts and field extraction per template
+- Textarea field type support for long-form inputs
+- Generic PDF filename generation based on template name
+- 28 backend tests, 85 frontend tests
+
 ### Not Yet Implemented
-- Multi-template frontend (only NDA currently)
 - Frontend auth UI (signup/signin)
 - Frontend-backend integration (document save)
 
@@ -88,6 +96,8 @@ Backend available at http://localhost:8000
 - `GET /api/documents/{id}` - Get specific document (auth required)
 - `PUT /api/documents/{id}` - Update document (auth required)
 - `DELETE /api/documents/{id}` - Delete document (auth required)
-- `GET /api/chat/greeting` - Get AI greeting for NDA drafting
-- `POST /api/chat/message` - Send chat message, returns AI reply + extracted NDA fields
+- `GET /api/templates` - List all templates with categories
+- `GET /api/templates/{id}` - Get full template definition
+- `GET /api/chat/greeting?template_id={id}` - Get AI greeting for specific template
+- `POST /api/chat/message` - Send chat message with template_id, returns AI reply + extracted fields
 - `GET /api/health` - Health check

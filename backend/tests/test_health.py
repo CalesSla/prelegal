@@ -51,6 +51,7 @@ async def test_chat_message(client):
                 "governing_law_state": "",
                 "nda_type": "mutual",
             },
+            "template_id": "nda",
         })
     assert resp.status_code == 200
     data = resp.json()
@@ -68,9 +69,10 @@ async def test_chat_message_no_extraction(client):
         resp = await client.post("/api/chat/message", json={
             "messages": [{"role": "user", "content": "I need an NDA"}],
             "current_fields": {},
+            "template_id": "nda",
         })
     assert resp.status_code == 200
-    assert resp.json()["extracted_fields"]["disclosing_party_name"] is None
+    assert resp.json()["extracted_fields"] == {}
 
 
 @pytest.mark.asyncio

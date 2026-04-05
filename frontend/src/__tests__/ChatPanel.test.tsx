@@ -27,6 +27,7 @@ describe("ChatPanel", () => {
   it("loads and displays the greeting on mount", async () => {
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -36,12 +37,13 @@ describe("ChatPanel", () => {
       expect(screen.getByText("Hello! How can I help?")).toBeInTheDocument();
     });
 
-    expect(mockFetch).toHaveBeenCalledWith("/api/chat/greeting");
+    expect(mockFetch).toHaveBeenCalledWith("/api/chat/greeting?template_id=nda");
   });
 
   it("renders the AI Assistant header", () => {
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -68,6 +70,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={onFieldsExtracted}
       />,
@@ -88,6 +91,47 @@ describe("ChatPanel", () => {
     expect(onFieldsExtracted).toHaveBeenCalledWith({
       disclosing_party_name: "Acme Corp",
     });
+  });
+
+  it("includes template_id in message request body", async () => {
+    const user = userEvent.setup();
+
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ message: "Hello!" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ reply: "OK", extracted_fields: {} }),
+      });
+
+    render(
+      <ChatPanel
+        templateId="employment_agreement"
+        fieldValues={{}}
+        onFieldsExtracted={jest.fn()}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello!")).toBeInTheDocument();
+    });
+
+    const textarea = screen.getByPlaceholderText("Type your message...");
+    await user.type(textarea, "test");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("OK")).toBeInTheDocument();
+    });
+
+    const messageCall = mockFetch.mock.calls.find(
+      (call: unknown[]) => call[0] === "/api/chat/message"
+    );
+    expect(messageCall).toBeDefined();
+    const body = JSON.parse(messageCall![1].body);
+    expect(body.template_id).toBe("employment_agreement");
   });
 
   it("does not call onFieldsExtracted when no fields are extracted", async () => {
@@ -112,6 +156,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={onFieldsExtracted}
       />,
@@ -144,6 +189,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -169,6 +215,7 @@ describe("ChatPanel", () => {
   it("disables send button when input is empty", () => {
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -195,6 +242,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -210,7 +258,6 @@ describe("ChatPanel", () => {
 
     expect(screen.getByText("Thinking...")).toBeInTheDocument();
 
-    // Clean up
     resolveChat!({
       ok: true,
       json: async () => ({
@@ -239,6 +286,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={jest.fn()}
       />,
@@ -279,6 +327,7 @@ describe("ChatPanel", () => {
 
     render(
       <ChatPanel
+        templateId="nda"
         fieldValues={defaultFieldValues}
         onFieldsExtracted={onFieldsExtracted}
       />,

@@ -2,13 +2,13 @@
 
 import { TemplateVariable } from "@/lib/template";
 
-interface NdaFormProps {
+interface DocumentFormProps {
   variables: TemplateVariable[];
   values: Record<string, string>;
   onChange: (key: string, value: string) => void;
 }
 
-export default function NdaForm({ variables, values, onChange }: NdaFormProps) {
+export default function DocumentForm({ variables, values, onChange }: DocumentFormProps) {
   return (
     <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
       <h2 className="text-lg font-semibold text-gray-900">
@@ -31,12 +31,25 @@ export default function NdaForm({ variables, values, onChange }: NdaFormProps) {
               onChange={(e) => onChange(variable.key, e.target.value)}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
             >
+              {!values[variable.key] && (
+                <option value="" disabled>Select...</option>
+              )}
               {variable.options.map((option) => (
                 <option key={option} value={option}>
                   {option.charAt(0).toUpperCase() + option.slice(1)}
                 </option>
               ))}
             </select>
+          ) : variable.type === "textarea" ? (
+            <textarea
+              id={variable.key}
+              value={values[variable.key] || ""}
+              required={variable.required}
+              onChange={(e) => onChange(variable.key, e.target.value)}
+              rows={4}
+              placeholder={variable.label}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+            />
           ) : variable.type === "date" ? (
             <input
               id={variable.key}

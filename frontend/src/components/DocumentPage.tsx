@@ -1,13 +1,17 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { getTemplate, getDefaultValues, fillTemplate } from "@/lib/template";
-import NdaForm from "./NdaForm";
-import NdaPreview from "./NdaPreview";
+import { Template, getDefaultValues } from "@/lib/template";
+import DocumentForm from "./DocumentForm";
+import DocumentPreview from "./DocumentPreview";
 import ChatPanel from "./ChatPanel";
 
-export default function NdaPage() {
-  const [template] = useState(() => getTemplate());
+interface DocumentPageProps {
+  template: Template;
+  onBack: () => void;
+}
+
+export default function DocumentPage({ template, onBack }: DocumentPageProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     getDefaultValues(template)
   );
@@ -55,9 +59,15 @@ export default function NdaPage() {
     }
 
     try {
-      const partyName = values.disclosing_party_name || "NDA";
-      const typeLabel = values.nda_type === "one-way" ? "OneWay" : "Mutual";
-      const filename = `${typeLabel}_NDA_${partyName.replace(/\s+/g, "_")}.pdf`;
+      const safeName = template.name.replace(/\s+/g, "_");
+      const firstTextValue = template.variables
+        .filter((v) => v.type === "text")
+        .map((v) => values[v.key])
+        .find((v) => v?.trim());
+      const suffix = firstTextValue
+        ? `_${firstTextValue.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "")}`
+        : "";
+      const filename = `${safeName}${suffix}.pdf`;
 
       await html2pdf()
         .set({
@@ -75,7 +85,7 @@ export default function NdaPage() {
     } finally {
       setIsDownloading(false);
     }
-  }, [values, template.variables]);
+  }, [values, template]);
 
   const allRequiredFilled = template.variables
     .filter((v) => v.required)
@@ -85,11 +95,20 @@ export default function NdaPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Prelegal</h1>
-            <p className="text-sm text-gray-500">
-              Non-Disclosure Agreement Generator
-            </p>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onBack}
+              className="text-sm font-medium transition-colors hover:opacity-80"
+              style={{ color: "#209dd7" }}
+            >
+              &larr; Back
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Prelegal</h1>
+              <p className="text-sm text-gray-500">
+                {template.name}
+              </p>
+            </div>
           </div>
           <button
             onClick={handleDownload}
@@ -104,7 +123,7 @@ export default function NdaPage() {
       <main className="max-w-[1400px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)_minmax(0,1fr)] gap-6">
           <aside className="bg-white rounded-lg border border-gray-200 p-6 h-fit lg:sticky lg:top-8">
-            <NdaForm
+            <DocumentForm
               variables={template.variables}
               values={values}
               onChange={handleChange}
@@ -112,14 +131,16 @@ export default function NdaPage() {
           </aside>
           <div className="lg:h-[calc(100vh-140px)] lg:sticky lg:top-8">
             <ChatPanel
+              templateId={template.id}
               fieldValues={values}
               onFieldsExtracted={handleFieldsExtracted}
             />
           </div>
           <section>
-            <NdaPreview
+            <DocumentPreview
               title={template.name}
               sections={template.sections}
+              variables={template.variables}
               values={values}
               previewRef={previewRef}
             />

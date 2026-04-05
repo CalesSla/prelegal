@@ -8,7 +8,7 @@ The available documents are covered in the template index file:
 
 @backend/data/templates/index.json
 
-The frontend currently supports the NDA template only. The backend provides auth and document persistence. AI chat is wired to LiteLLM via OpenRouter (Cerebras inference).
+The frontend supports all 10 template types. The backend provides auth, document persistence, and a templates API. AI chat is template-aware via LiteLLM + OpenRouter (Cerebras inference).
 
 ## Development process
 
@@ -82,9 +82,18 @@ Backend available at http://localhost:8000
 - Generic PDF filename generation based on template name
 - 28 backend tests, 85 frontend tests
 
+### Multi-User Support & Polish (PL-7) - Complete
+- Auth UI: sign in / sign up screens with mode toggle, error handling
+- Session management: JWT cookie-based auth check on boot, sign out
+- Document save: Save Document button (create + update) with status feedback
+- Document history: My Documents section on template selector, reopen saved docs
+- Disclaimer: legal draft notice on auth screen, template selector footer, document preview (included in PDF)
+- UI polish: card hover transitions, consistent spacing, user email in header
+- Typed API client (api.ts) with centralized error handling
+- 28 backend tests, 108 frontend tests
+
 ### Not Yet Implemented
-- Frontend auth UI (signup/signin)
-- Frontend-backend integration (document save)
+- (Core features complete)
 
 ### Current API Endpoints
 - `POST /api/auth/signup` - Create new user account

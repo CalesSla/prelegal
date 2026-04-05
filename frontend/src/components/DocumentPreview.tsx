@@ -8,6 +8,7 @@ interface DocumentPreviewProps {
   variables: TemplateVariable[];
   values: Record<string, string>;
   previewRef: React.RefObject<HTMLDivElement | null>;
+  showDisclaimer?: boolean;
 }
 
 function highlightUnfilled(text: string): React.ReactNode[] {
@@ -52,6 +53,7 @@ export default function DocumentPreview({
   variables,
   values,
   previewRef,
+  showDisclaimer,
 }: DocumentPreviewProps) {
   return (
     <div
@@ -77,6 +79,13 @@ export default function DocumentPreview({
           </div>
         </div>
       ))}
+      {showDisclaimer && (
+        <p className="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-400 italic text-center">
+          This document is a draft for informational purposes only and is
+          subject to professional legal review. It does not constitute legal
+          advice.
+        </p>
+      )}
     </div>
   );
 }
